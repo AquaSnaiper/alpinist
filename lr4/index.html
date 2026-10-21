@@ -1,0 +1,1638 @@
+<!doctype html>
+<html lang="ru">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Гостиница «Альпинист»</title>
+<link rel="preconnect" href="https://fonts.gstatic.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap">
+</head>
+<body>
+<style>
+/* Портал гостиницы «Альпинист»: структура разделов и страниц (ЛР4) на шаблоне дизайна ЛР3 — интерактивная вёрстка.
+   Светлая тема намеренно: фирменный стиль гостиницы. */
+:root{
+  --c-text:#111111; --c-text-2:#5B6570; --c-bg:#FFFFFF; --c-sand:#F3EFE8; --c-border:#E2D9CC;
+  --c-accent:#B5653F; --c-accent-h:#97512F; --c-mountain:#72879F; --c-ink:#2E3B4A; --c-pine:#2F4A3A;
+  --c-ok:#3F7D58; --c-ok-bg:#E4F0E8; --c-warn:#B7832A; --c-warn-bg:#F8EDD8; --c-err:#B03A2E; --c-err-bg:#F6E1DE;
+  --c-info:#4D6A8A; --c-info-bg:#E3EAF2; --c-gray:#6E6A64; --c-gray-bg:#EEECE9; --c-main:#FBFAF8;
+  --c-ink-line:#45535F; --c-ink-text:#D5DCE4; --c-ink-muted:#9AA7B4; --c-white:#FFFFFF; --c-overlay:rgba(30,38,48,.45);
+  --f:'Inter',system-ui,-apple-system,'Segoe UI',Roboto,Arial,sans-serif;
+  --r-lg:16px; --r:12px; --r-sm:8px;
+  --shadow:0 4px 18px rgba(46,59,74,.08); --shadow-lg:0 24px 64px rgba(30,40,50,.28);
+  --gut:max(32px, env(safe-area-inset-left, 0px)); --gut-r:max(32px, env(safe-area-inset-right, 0px));
+  color-scheme:light;
+}
+*{box-sizing:border-box}
+html,body{margin:0}
+body{font-family:var(--f);color:var(--c-text);background:var(--c-bg);font-size:17px;line-height:1.6;-webkit-font-smoothing:antialiased}
+body::before{content:"";position:fixed;inset:0 0 auto;height:env(safe-area-inset-top,0px);z-index:40;background:var(--c-white)}
+body.staff::before{background:var(--c-ink)}
+h1,h2,h3,h4,p{margin:0}
+h1{font-size:52px;line-height:1.15;font-weight:500;letter-spacing:-.02em;text-wrap:balance}
+h2{font-size:34px;line-height:1.2;font-weight:500;letter-spacing:-.01em;text-wrap:balance}
+h3{font-size:22px;line-height:1.3;font-weight:600}
+h4{font-size:17px;line-height:1.4;font-weight:600}
+a{color:inherit;text-decoration:none}
+a[href],button{cursor:pointer}
+button{font:inherit;color:inherit;background:none;border:0;padding:0}
+:focus-visible{outline:2px solid var(--c-accent);outline-offset:2px}
+.small{font-size:14px;line-height:1.5;color:var(--c-text-2)}
+.muted{color:var(--c-text-2)}
+.err-text{color:var(--c-err)}
+.nowrap{white-space:nowrap}
+.center{text-align:center}
+.mt8{margin-top:8px}.mt12{margin-top:12px}.mt16{margin-top:16px}.mt24{margin-top:24px}.mt32{margin-top:32px}
+.row{display:flex;gap:12px;align-items:center}
+.row.wrap{flex-wrap:wrap}.gap8{gap:8px}.jc-e{justify-content:flex-end}.jc-b{justify-content:space-between}.ai-c{align-items:center}.ai-s{align-items:flex-start}
+.stack{display:flex;flex-direction:column;gap:16px;min-width:0}
+.w100{width:100%}
+.container{max-width:1264px;margin:0 auto;padding-left:var(--gut);padding-right:var(--gut)}
+.tnum{font-variant-numeric:tabular-nums}
+
+/* ---------- Заголовочная часть + навигация ---------- */
+.header{position:sticky;top:env(safe-area-inset-top,0px);z-index:30;height:84px;border-bottom:1px solid var(--c-border);background:var(--c-white)}
+.header .container{height:100%;display:flex;align-items:center;gap:32px;position:relative}
+.logo{display:flex;align-items:center;gap:10px;font-weight:700;font-size:20px;white-space:nowrap}
+.logo svg{flex:none}
+.nav{display:flex;gap:28px;margin-left:auto;font-size:16px}
+.nav a{padding:6px 0;border-bottom:2px solid transparent}
+.nav a:hover{color:var(--c-accent)}
+.nav a.active{border-color:var(--c-accent);color:var(--c-accent);font-weight:500}
+.nav .m-only{display:none}
+.header-actions{display:flex;align-items:center;gap:16px}
+.user{display:flex;align-items:center;gap:10px;font-size:15px;font-weight:500;padding:4px 6px;border-radius:10px}
+.user:hover{background:var(--c-sand)}
+.avatar{width:36px;height:36px;border-radius:50%;background:var(--c-mountain);color:var(--c-white);display:grid;place-items:center;font-size:14px;font-weight:600;flex:none}
+.avatar.lg{width:48px;height:48px;font-size:17px}
+.avatar.acc{background:var(--c-accent)}
+.burger{display:none;margin-left:auto;width:42px;height:42px;border:1px solid var(--c-border);border-radius:8px;align-items:center;justify-content:center;flex-direction:column;gap:4px;flex:none}
+.burger i{display:block;width:18px;height:2px;background:var(--c-text)}
+.dd-wrap{position:relative}
+.dropdown{position:absolute;top:calc(100% + 8px);right:0;min-width:240px;background:var(--c-white);border:1px solid var(--c-border);border-radius:var(--r);box-shadow:var(--shadow-lg);padding:6px;z-index:50;color:var(--c-text)}
+.dropdown a,.dropdown button{display:flex;justify-content:space-between;gap:12px;width:100%;text-align:left;padding:10px 12px;border-radius:8px;font-size:15px}
+.dropdown a:hover,.dropdown button:hover{background:var(--c-sand)}
+.dropdown .dd-sep{height:1px;background:var(--c-border);margin:6px 4px}
+.dropdown .dd-empty{padding:12px;font-size:14px;color:var(--c-text-2)}
+.dropdown.wide{min-width:320px}
+.cnt{background:var(--c-accent);color:var(--c-white);font-size:12px;border-radius:10px;padding:1px 8px;font-weight:600;line-height:18px}
+
+/* ---------- Кнопки, поля, бейджи ---------- */
+.btn{display:inline-flex;align-items:center;justify-content:center;gap:8px;height:48px;padding:0 24px;border-radius:var(--r-sm);font:500 16px var(--f);border:1px solid var(--c-accent);background:var(--c-accent);color:var(--c-white);white-space:nowrap;transition:background .15s,border-color .15s}
+.btn:hover{background:var(--c-accent-h);border-color:var(--c-accent-h)}
+.btn.outline{background:transparent;color:var(--c-accent)}
+.btn.outline:hover{background:var(--c-sand)}
+.btn.ghost{background:var(--c-white);border-color:var(--c-border);color:var(--c-text)}
+.btn.ghost:hover{border-color:var(--c-text-2);background:var(--c-white)}
+.btn.sm{height:36px;padding:0 14px;font-size:14px}
+.btn.ok{background:var(--c-ok);border-color:var(--c-ok)}
+.btn.ok:hover{filter:brightness(.92)}
+.btn.danger{background:var(--c-white);color:var(--c-err);border-color:#E3B7B1}
+.btn.danger:hover{background:var(--c-err-bg)}
+.btn[disabled],.btn.disabled{background:#E7E3DD;border-color:#E7E3DD;color:#9A958E;cursor:not-allowed}
+.field{display:flex;flex-direction:column;gap:6px;font-size:14px;color:var(--c-text-2);min-width:0}
+.input{height:48px;width:100%;border:1px solid var(--c-border);border-radius:var(--r-sm);background:var(--c-white);padding:0 14px;font:16px var(--f);color:var(--c-text);min-width:0}
+.input:focus{outline:none;border-color:var(--c-accent);box-shadow:0 0 0 3px rgba(181,101,63,.18)}
+.input.invalid{border-color:var(--c-err);box-shadow:0 0 0 3px rgba(176,58,46,.14)}
+.input.sm{height:40px;font-size:15px}
+.input[readonly]{background:var(--c-sand);color:var(--c-text-2)}
+textarea.input{height:auto;min-height:96px;padding:12px 14px;resize:vertical;line-height:1.5}
+select.input{appearance:none;-webkit-appearance:none;padding-right:38px;background:var(--c-white) url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8'%3E%3Cpath d='M1 1l5 5 5-5' fill='none' stroke='%235B6570' stroke-width='1.6'/%3E%3C/svg%3E") no-repeat right 14px center}
+input[type=checkbox],input[type=radio]{accent-color:var(--c-accent);width:18px;height:18px;margin:0;flex:none}
+.check{display:flex;align-items:center;gap:12px;color:var(--c-text);font-size:15px;cursor:pointer}
+.badge{display:inline-flex;align-items:center;gap:6px;height:26px;padding:0 10px;border-radius:13px;font-size:13px;font-weight:500;white-space:nowrap}
+.badge::before{content:"";width:7px;height:7px;border-radius:50%;background:currentColor}
+.b-ok{background:var(--c-ok-bg);color:var(--c-ok)}
+.b-warn{background:var(--c-warn-bg);color:var(--c-warn)}
+.b-err{background:var(--c-err-bg);color:var(--c-err)}
+.b-info{background:var(--c-info-bg);color:var(--c-info)}
+.b-gray{background:var(--c-gray-bg);color:var(--c-gray)}
+.chips{display:flex;flex-wrap:wrap;gap:8px}
+.chip{font-size:13px;padding:4px 10px;border-radius:6px;background:var(--c-sand);color:var(--c-text-2)}
+.fchip{height:34px;padding:0 14px;border-radius:17px;border:1px solid var(--c-border);background:var(--c-white);font-size:14px}
+.fchip.on{background:var(--c-ink);border-color:var(--c-ink);color:var(--c-white)}
+.chip-r{position:relative}
+.chip-r input{position:absolute;opacity:0;pointer-events:none}
+.chip-r span{display:inline-block;padding:6px 12px;border-radius:6px;background:var(--c-sand);color:var(--c-text-2);font-size:13px;cursor:pointer}
+.chip-r input:checked+span{background:var(--c-accent);color:var(--c-white)}
+.chip-r input:focus-visible+span{outline:2px solid var(--c-accent);outline-offset:2px}
+
+/* ---------- Основная часть ---------- */
+.section{padding:80px 0}
+.section.sand{background:var(--c-sand);border-top:1px solid var(--c-border);border-bottom:1px solid var(--c-border)}
+.section-head{display:flex;justify-content:space-between;align-items:end;gap:16px;margin-bottom:32px}
+.page{padding:40px 0 80px}
+.panel{background:var(--c-sand);border:1px solid var(--c-border);border-radius:var(--r-lg);padding:24px 32px}
+.card{background:var(--c-white);border:1px solid var(--c-border);border-radius:var(--r);overflow:hidden}
+.card.pad{padding:24px}
+.card.pad-l{padding:28px}
+.page-title{background:var(--c-sand);border-bottom:1px solid var(--c-border);padding:32px 0}
+.page-title h1{font-size:40px}
+.crumbs{font-size:14px;color:var(--c-text-2);margin-bottom:8px}
+.crumbs a:hover{color:var(--c-accent)}
+.crumbs b{color:var(--c-text);font-weight:500}
+.grid4{display:grid;grid-template-columns:repeat(4,1fr);gap:24px}
+.grid3{display:grid;grid-template-columns:repeat(3,1fr);gap:24px}
+.grid2{display:grid;grid-template-columns:1fr 1fr;gap:16px}
+.price{font-size:22px;font-weight:600;white-space:nowrap}
+.price span{font-size:14px;font-weight:400;color:var(--c-text-2)}
+.head-row{display:flex;justify-content:space-between;align-items:center;gap:16px;flex-wrap:wrap;margin-bottom:20px}
+.h2s{font-size:28px}
+.empty{padding:40px 24px;text-align:center;color:var(--c-text-2);border:1px dashed var(--c-border);border-radius:var(--r);background:var(--c-white)}
+.empty a{color:var(--c-accent);text-decoration:underline}
+.link{color:var(--c-accent);text-decoration:underline;text-underline-offset:3px}
+.note{background:var(--c-info-bg);color:var(--c-info);border-radius:var(--r-sm);padding:12px 14px;font-size:14px}
+.tabs{display:flex;gap:24px;border-bottom:1px solid var(--c-border);margin-bottom:24px;font-size:15px;overflow-x:auto}
+.tabs button{padding:10px 0;border-bottom:2px solid transparent;color:var(--c-text-2);white-space:nowrap}
+.tabs button.on{border-color:var(--c-accent);color:var(--c-accent);font-weight:600}
+
+/* Главная */
+.hero{position:relative;height:520px;overflow:hidden;display:flex;align-items:center;justify-content:center;text-align:center;color:var(--c-white)}
+.hero svg{position:absolute;inset:0}
+.hero-in{position:relative;max-width:840px;margin-top:-40px;padding:0 16px}
+.hero-title{font-size:64px;text-shadow:0 2px 16px rgba(0,0,0,.25)}
+.hero-sub{font-size:20px;margin-top:16px;opacity:.95}
+.search-wrap{margin-top:-56px;position:relative;z-index:2}
+.search{display:grid;grid-template-columns:1.3fr 1.3fr .8fr .8fr auto;gap:16px;align-items:end;background:var(--c-white);box-shadow:var(--shadow)}
+.room-card{display:block;transition:box-shadow .15s,transform .15s}
+.room-card:hover{box-shadow:var(--shadow);transform:translateY(-2px)}
+.room-card .pad{padding:20px}
+.split{display:grid;grid-template-columns:1fr 1.3fr;gap:64px}
+.srv-row{padding:20px 0;border-top:1px solid var(--c-border);display:grid;grid-template-columns:1fr auto;gap:4px 24px}
+.srv-row:hover h4{color:var(--c-accent)}
+.srv-price{font-weight:600;text-align:right;white-space:nowrap}
+.review{padding:24px;display:flex;flex-direction:column;gap:12px}
+.stars{color:var(--c-accent);letter-spacing:2px}
+.stars .off{color:var(--c-border)}
+
+/* Номера */
+.aside-grid{display:grid;grid-template-columns:280px minmax(0,1fr);gap:32px;align-items:start}
+.filter{padding:24px;display:flex;flex-direction:column;gap:18px}
+.room-row{display:grid;grid-template-columns:300px minmax(0,1fr) auto}
+.room-row .img{cursor:pointer;min-height:200px}
+.room-row .body{padding:24px;display:flex;flex-direction:column;gap:10px;min-width:0}
+.room-row .side-p{padding:24px;border-left:1px solid var(--c-border);display:flex;flex-direction:column;justify-content:space-between;align-items:flex-end;gap:16px;min-width:220px}
+
+/* Услуги */
+.svc-card{padding:28px;display:flex;flex-direction:column;gap:12px}
+.svc-ic{width:48px;height:48px;border-radius:12px;background:var(--c-sand);display:grid;place-items:center;color:var(--c-accent)}
+.svc-card .grow{flex:1}
+
+/* Бронирование */
+.stepper{display:flex;align-items:center;gap:20px;margin-bottom:32px}
+.step{display:flex;align-items:center;gap:12px;white-space:nowrap}
+.step .dot{width:32px;height:32px;border-radius:50%;display:grid;place-items:center;font-size:14px;border:1px solid var(--c-border);color:var(--c-text-2);background:var(--c-white)}
+.step.done .dot{background:var(--c-ok);border-color:var(--c-ok);color:var(--c-white)}
+.step.cur{font-weight:600}
+.step.cur .dot{background:var(--c-accent);border-color:var(--c-accent);color:var(--c-white)}
+.step-line{flex:1;height:1px;background:var(--c-border);min-width:16px}
+.bk-grid{display:grid;grid-template-columns:minmax(0,1fr) 380px;gap:32px;align-items:start}
+.summary{padding:28px;position:sticky;top:calc(env(safe-area-inset-top,0px) + 104px)}
+.sum-img{border-radius:10px;overflow:hidden;margin:16px 0}
+.sum{display:grid;grid-template-columns:1fr auto;gap:8px 16px;font-size:15px;margin:16px 0 0}
+.sum dt{color:var(--c-text-2)} .sum dd{margin:0;text-align:right}
+.total{border-top:1px solid var(--c-border);margin:16px 0;padding-top:16px;display:flex;justify-content:space-between;align-items:baseline}
+.total b{font-size:28px;font-weight:600}
+.type-list{display:flex;flex-direction:column;gap:12px}
+.type-opt{display:grid;grid-template-columns:auto 120px minmax(0,1fr) auto;gap:16px;align-items:center;border:1px solid var(--c-border);border-radius:var(--r);padding:12px 16px 12px 14px;cursor:pointer;background:var(--c-white)}
+.type-opt.on{border-color:var(--c-accent);box-shadow:0 0 0 3px rgba(181,101,63,.14)}
+.type-opt.dis{opacity:.55;cursor:not-allowed}
+.type-opt .to-img{border-radius:8px;overflow:hidden;height:72px}
+.type-opt .to-body{display:flex;flex-direction:column;gap:4px;align-items:flex-start}
+.type-opt .to-price{font-weight:600;text-align:right;white-space:nowrap}
+.type-opt .to-price small{display:block;font-weight:400;font-size:13px;color:var(--c-text-2)}
+.svc-check{display:grid;grid-template-columns:auto 1fr auto;gap:16px;align-items:center;padding:14px 0;border-bottom:1px solid var(--c-border);cursor:pointer}
+.pay-list{display:flex;flex-direction:column;gap:12px;margin:20px 0}
+.pay-opt{display:flex;gap:14px;align-items:center;border:1px solid var(--c-border);border-radius:var(--r);padding:16px;cursor:pointer}
+.pay-opt.on{border-color:var(--c-accent);box-shadow:0 0 0 3px rgba(181,101,63,.14)}
+.pay-opt b{display:block}
+.done{text-align:center;padding:48px 28px}
+.done-ic{width:64px;height:64px;border-radius:50%;background:var(--c-ok);color:var(--c-white);display:grid;place-items:center;font-size:30px;margin:0 auto 20px}
+.done .row{justify-content:center}
+
+/* Личный кабинет */
+.acc-grid{display:grid;grid-template-columns:260px minmax(0,1fr);gap:32px;align-items:start}
+.acc-side{padding:24px}
+.acc-user{display:flex;gap:12px;align-items:center;margin-bottom:20px;min-width:0}
+.acc-user > div{min-width:0}
+.acc-user .small{overflow:hidden;text-overflow:ellipsis}
+.acc-nav{display:flex;flex-direction:column;gap:4px;font-size:15px}
+.acc-nav a{padding:10px 12px;border-radius:8px;display:flex;justify-content:space-between;align-items:center}
+.acc-nav a:hover{background:rgba(255,255,255,.6)}
+.acc-nav a.on{background:var(--c-white);color:var(--c-accent);font-weight:600}
+.bk-card{display:grid;grid-template-columns:200px minmax(0,1fr) auto}
+.bk-card .bk-img{min-height:170px}
+.bk-card .bk-body{padding:22px 24px;display:flex;flex-direction:column;gap:6px;min-width:0}
+.bk-card .bk-side{padding:22px 24px;display:flex;flex-direction:column;justify-content:space-between;align-items:flex-end;gap:12px}
+.note-row{display:flex;gap:14px;padding:16px 20px;border-bottom:1px solid var(--c-border);align-items:flex-start}
+.note-row:last-child{border-bottom:0}
+.note-dot{width:8px;height:8px;border-radius:50%;background:var(--c-accent);margin-top:9px;flex:none}
+.note-dot.read{background:var(--c-border)}
+
+/* Вход */
+.auth{max-width:520px;margin:0 auto}
+.demo{display:flex;flex-direction:column;gap:8px}
+.demo button{display:flex;justify-content:space-between;align-items:center;gap:12px;padding:12px 14px;border:1px solid var(--c-border);border-radius:var(--r-sm);background:var(--c-white);text-align:left;font-size:15px}
+.demo button:hover{border-color:var(--c-accent)}
+
+/* Контакты, информация */
+.contact-grid{display:grid;grid-template-columns:1fr 1fr;gap:32px;align-items:start}
+.c-list{display:grid;grid-template-columns:auto 1fr;gap:12px 20px;font-size:16px}
+.c-list dt{color:var(--c-text-2)} .c-list dd{margin:0}
+.map{border-radius:var(--r);overflow:hidden;border:1px solid var(--c-border);margin-top:24px}
+.prose{max-width:760px;display:flex;flex-direction:column;gap:14px}
+.prose h2{font-size:28px;margin-top:24px;scroll-margin-top:110px}
+.prose ul{margin:0;padding-left:22px;display:flex;flex-direction:column;gap:6px}
+
+/* ---------- Нижняя часть (футер) ---------- */
+.footer{background:var(--c-ink);color:var(--c-ink-text);padding:64px 0 24px;font-size:15px}
+.footer .cols{display:grid;grid-template-columns:1.4fr 1fr 1fr 1.2fr;gap:48px}
+.footer h4{color:var(--c-white);margin-bottom:16px;font-size:15px;text-transform:uppercase;letter-spacing:.06em}
+.footer ul{margin:0;padding:0}
+.footer li{list-style:none;margin-bottom:8px}
+.footer a:hover{color:var(--c-white);text-decoration:underline}
+.footer .logo{color:var(--c-white);margin-bottom:16px}
+.footer .bottom{border-top:1px solid var(--c-ink-line);margin-top:48px;padding-top:24px;display:flex;justify-content:space-between;gap:16px;flex-wrap:wrap;font-size:13px;color:var(--c-ink-muted)}
+
+/* ---------- Служебный раздел ---------- */
+.st-header{position:sticky;top:env(safe-area-inset-top,0px);z-index:30;height:68px;background:var(--c-ink);color:var(--c-white);display:flex;align-items:center;gap:24px;padding-left:var(--gut);padding-right:var(--gut)}
+.staff-tag{font-size:13px;padding:4px 10px;border:1px solid #5A6878;border-radius:6px;color:#C9D2DB;white-space:nowrap}
+.st-right{margin-left:auto;display:flex;align-items:center;gap:20px}
+.st-link{font-size:14px;color:#C9D2DB;white-space:nowrap}
+.st-link:hover{color:var(--c-white)}
+.bell{position:relative;width:40px;height:40px;border-radius:8px;display:grid;place-items:center;color:#C9D2DB}
+.bell:hover{background:rgba(255,255,255,.08);color:var(--c-white)}
+.bell-cnt{position:absolute;top:2px;right:0;background:var(--c-accent);color:var(--c-white);font-size:11px;font-weight:600;border-radius:9px;padding:0 6px;line-height:17px}
+.st-user{color:var(--c-white)}
+.st-user:hover{background:rgba(255,255,255,.08)}
+.u-txt{display:flex;flex-direction:column;align-items:flex-start;line-height:1.25}
+.u-txt small{font-size:12px;color:#AEB9C4;font-weight:400}
+.layout{display:grid;grid-template-columns:290px minmax(0,1fr);min-height:calc(100vh - 68px)}
+.side{background:var(--c-sand);border-right:1px solid var(--c-border);padding:24px 16px}
+.side .grp{font-size:12px;text-transform:uppercase;letter-spacing:.08em;color:var(--c-text-2);padding:0 12px;margin:24px 0 8px}
+.side .grp:first-child{margin-top:0}
+.side a{display:flex;align-items:center;gap:12px;height:44px;padding:0 12px;border-radius:var(--r-sm);font-size:15px;white-space:nowrap}
+.side a:hover{background:rgba(255,255,255,.6)}
+.side a.active{background:var(--c-white);color:var(--c-accent);font-weight:600;box-shadow:inset 3px 0 0 var(--c-accent)}
+.side a .cnt{margin-left:auto}
+.st-col{display:flex;flex-direction:column;min-width:0}
+.main{padding:32px 48px;background:var(--c-main);flex:1;min-width:0}
+.kpis{display:grid;grid-template-columns:repeat(4,1fr);gap:16px;margin:0 0 24px}
+.kpi{background:var(--c-white);border:1px solid var(--c-border);border-radius:var(--r);padding:16px 24px}
+.kpi .v{font-size:30px;font-weight:600;line-height:1.2;margin-top:4px;font-variant-numeric:tabular-nums}
+.filters{display:flex;gap:12px;padding:16px;align-items:center;border-bottom:1px solid var(--c-border);flex-wrap:wrap}
+.filters .input{width:auto}
+.filters .q{flex:1 1 260px}
+.inline-f{display:flex;align-items:center;gap:8px;font-size:14px;color:var(--c-text-2);white-space:nowrap}
+.tbl-wrap{overflow-x:auto}
+table{width:100%;border-collapse:collapse;font-size:15px}
+th{text-align:left;font-size:13px;font-weight:500;color:var(--c-text-2);padding:12px 16px;background:var(--c-sand);border-bottom:1px solid var(--c-border);white-space:nowrap}
+td{padding:14px 16px;border-bottom:1px solid #EEE8DF;vertical-align:middle;white-space:nowrap}
+td.wrap-c{white-space:normal;min-width:200px}
+tr.hl td{background:#FFF8F2}
+.tbl-foot{display:flex;justify-content:space-between;padding:14px 16px;font-size:14px;color:var(--c-text-2)}
+.id-link{font-weight:600;color:var(--c-accent)}
+.id-link:hover{text-decoration:underline}
+.staff-footer{border-top:1px solid var(--c-border);padding:14px 48px;font-size:13px;color:var(--c-text-2);display:flex;justify-content:space-between;gap:16px;flex-wrap:wrap;background:var(--c-white)}
+.staff-footer a{text-decoration:underline}
+.two-pane{display:grid;grid-template-columns:minmax(0,1fr) 340px;gap:32px;align-items:start}
+.sticky-card{position:sticky;top:calc(env(safe-area-inset-top,0px) + 88px)}
+.tiles{display:grid;grid-template-columns:repeat(auto-fill,minmax(200px,1fr));gap:14px}
+.tile{padding:16px;display:flex;flex-direction:column;gap:12px}
+.tile.dirty{border-color:#E3B7B1}
+.tile .no{font-size:22px;font-weight:600}
+.cal{font-size:13px}
+.cal th,.cal td{padding:8px 6px;text-align:center;border-right:1px solid #EEE8DF}
+.cal th small{display:block;font-weight:400}
+.cal th.we,.cal td.we{background:#F7F4EF}
+.cal th.today{color:var(--c-accent);font-weight:700}
+.cal td.today{background:#FFF4EC}
+.cal .sticky{position:sticky;left:0;background:var(--c-sand);z-index:1;text-align:left;padding-left:16px}
+.cal td.sticky{background:var(--c-white);font-weight:600}
+.cal-chip{display:block;width:100%;padding:6px 8px;border-radius:6px;font-size:12px;font-weight:500;text-align:left;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.cal-chip.confirmed{background:var(--c-ok-bg);color:var(--c-ok)}
+.cal-chip.pending{background:var(--c-warn-bg);color:var(--c-warn)}
+.cal-chip:hover{filter:brightness(.95)}
+.legend{display:flex;gap:16px;flex-wrap:wrap;margin-top:12px;font-size:13px;color:var(--c-text-2)}
+.bars{display:flex;flex-direction:column;gap:6px}
+.bar{height:10px;border-radius:5px;background:var(--c-gray-bg);overflow:hidden;min-width:120px}
+.bar span{display:block;height:100%;background:var(--c-accent);border-radius:5px}
+.shift{display:inline-block;min-width:44px;padding:4px 8px;border-radius:6px;font-size:13px;font-weight:600;text-align:center}
+.shift.D{background:var(--c-ok-bg);color:var(--c-ok)}
+.shift.N{background:var(--c-info-bg);color:var(--c-info)}
+.shift.O{background:var(--c-gray-bg);color:var(--c-gray);font-weight:400}
+.shift-sel{height:34px;padding:0 28px 0 10px;font-size:13px;background-position:right 10px center;width:auto}
+.mod-card{padding:20px 24px;display:grid;grid-template-columns:minmax(0,1fr) auto;gap:16px;align-items:start}
+
+/* ---------- Модальное окно, уведомления ---------- */
+.overlay{position:fixed;inset:0;background:var(--c-overlay);z-index:100;display:flex;align-items:flex-start;justify-content:center;padding:max(48px, env(safe-area-inset-top,0px)) max(16px, env(safe-area-inset-right,0px)) 32px max(16px, env(safe-area-inset-left,0px));overflow-y:auto;animation:fade .15s}
+.modal{background:var(--c-white);border-radius:var(--r-lg);box-shadow:var(--shadow-lg);width:100%;max-width:520px;animation:pop .18s}
+.modal.wide{max-width:720px}
+.m-head{display:flex;justify-content:space-between;align-items:center;gap:16px;padding:20px 24px;border-bottom:1px solid var(--c-border)}
+.m-body{padding:24px;display:flex;flex-direction:column;gap:16px}
+.m-foot{display:flex;justify-content:flex-end;gap:12px;flex-wrap:wrap;padding-top:4px}
+.x{width:36px;height:36px;border-radius:8px;font-size:24px;line-height:1;color:var(--c-text-2)}
+.x:hover{background:var(--c-sand)}
+.dl{display:grid;grid-template-columns:auto 1fr;gap:8px 20px;font-size:15px;margin:0}
+.dl dt{color:var(--c-text-2)} .dl dd{margin:0}
+.stars-in{display:inline-flex;flex-direction:row-reverse;justify-content:flex-end;gap:4px}
+.stars-in input{position:absolute;opacity:0;width:1px;height:1px}
+.stars-in label{font-size:30px;line-height:1;color:var(--c-border);cursor:pointer}
+.stars-in input:checked ~ label,.stars-in label:hover,.stars-in label:hover ~ label{color:var(--c-accent)}
+.stars-in input:focus-visible + label{outline:2px solid var(--c-accent);border-radius:4px}
+#toasts{position:fixed;right:max(20px, env(safe-area-inset-right,0px));bottom:max(20px, env(safe-area-inset-bottom,0px));z-index:200;display:flex;flex-direction:column;gap:10px;align-items:flex-end;pointer-events:none}
+.toast{background:var(--c-ink);color:var(--c-white);padding:12px 18px;border-radius:10px;box-shadow:var(--shadow-lg);font-size:15px;max-width:380px;border-left:4px solid var(--c-ok);animation:pop .2s;transition:opacity .3s,transform .3s}
+.toast.err{border-left-color:var(--c-err)} .toast.info{border-left-color:var(--c-mountain)}
+.toast.out{opacity:0;transform:translateY(8px)}
+@keyframes fade{from{opacity:0}}
+@keyframes pop{from{opacity:0;transform:translateY(8px)}}
+@media (prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}}
+
+/* ---------- Адаптивность ---------- */
+@media (max-width:1100px){
+  .burger{display:flex}
+  .nav{display:none;position:absolute;top:100%;left:0;right:0;background:var(--c-white);flex-direction:column;gap:0;padding:8px var(--gut-r) 16px var(--gut);border-bottom:1px solid var(--c-border);box-shadow:var(--shadow);margin:0}
+  body.nav-open .nav{display:flex}
+  .nav a{padding:12px 0;border-bottom:1px solid var(--c-border)}
+  .nav a.active{border-bottom-color:var(--c-border)}
+  .nav .m-only{display:block}
+  .header-actions{margin-left:auto}
+  .burger{margin-left:0}
+  .grid4{grid-template-columns:repeat(2,1fr)}
+  .bk-grid,.two-pane{grid-template-columns:1fr}
+  .summary,.sticky-card{position:static}
+  .kpis{grid-template-columns:repeat(2,1fr)}
+  .main{padding:24px}
+  .staff-footer{padding:14px 24px}
+}
+@media (max-width:900px){
+  .layout{grid-template-columns:1fr}
+  .side{display:flex;gap:4px;overflow-x:auto;padding:8px 16px;border-right:0;border-bottom:1px solid var(--c-border)}
+  .side .grp{display:none}
+  .side a{flex:none}
+  .aside-grid,.acc-grid,.contact-grid,.split{grid-template-columns:1fr}
+  .grid3{grid-template-columns:1fr 1fr}
+  .footer .cols{grid-template-columns:1fr 1fr}
+  .room-row,.bk-card{grid-template-columns:1fr}
+  .room-row .img,.bk-card .bk-img{height:180px;min-height:0}
+  .room-row .side-p,.bk-card .bk-side{border-left:0;border-top:1px solid var(--c-border);flex-direction:row;align-items:center;min-width:0;flex-wrap:wrap}
+  .staff-tag,.st-link{display:none}
+}
+@media (max-width:640px){
+  :root{--gut:max(16px, env(safe-area-inset-left, 0px));--gut-r:max(16px, env(safe-area-inset-right, 0px))}
+  h1{font-size:34px} h2{font-size:26px} .page-title h1{font-size:30px} .h2s{font-size:24px}
+  .header{height:64px}
+  .header .container{gap:12px}
+  .header-actions .btn{display:none}
+  .logo{font-size:16px}
+  .user .uname,.u-txt{display:none}
+  .hero{height:440px}
+  .hero-title{font-size:36px} .hero-sub{font-size:16px}
+  .search{grid-template-columns:1fr 1fr;padding:16px}
+  .search .btn{grid-column:1/-1}
+  .grid4,.grid3,.grid2,.footer .cols{grid-template-columns:1fr}
+  .section{padding:48px 0}
+  .panel{padding:20px}
+  .kpis{grid-template-columns:1fr 1fr}
+  .stepper{gap:8px}.stepper .step span.lbl{display:none}
+  .type-opt{grid-template-columns:auto minmax(0,1fr) auto}
+  .type-opt .to-img{display:none}
+  .mod-card{grid-template-columns:1fr}
+  .main{padding:20px 16px}
+}
+.two-pane > *,.bk-grid > *,.acc-grid > *,.aside-grid > *,.contact-grid > *{min-width:0}
+.kpi{min-width:0}
+@media (max-width:640px){
+  .kpi .v{font-size:22px}
+  .inline-f{flex-wrap:wrap;white-space:normal}
+  .filters .input{max-width:100%}
+}
+.cal{table-layout:fixed;min-width:860px}
+.cal tr:first-child th:first-child{width:150px}
+
+/* ---------- ЛР4: страницы номеров, раздел «Информация», карта сайта, 404 ---------- */
+.file-in{display:flex;align-items:center;gap:12px;min-height:48px;padding:6px 8px;border:1px solid var(--c-border);border-radius:var(--r-sm);background:var(--c-white);cursor:pointer;position:relative}
+.file-in input{position:absolute;opacity:0;width:1px;height:1px}
+.file-in:focus-within{border-color:var(--c-accent);box-shadow:0 0 0 3px rgba(181,101,63,.18)}
+.file-in .f-name{overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.room-page{display:grid;grid-template-columns:minmax(0,1fr) 360px;gap:40px;align-items:start}
+.room-hero{border-radius:var(--r-lg);overflow:hidden;border:1px solid var(--c-border)}
+.room-buy .price{font-size:30px}
+.room-buy .dl{font-size:15px}
+.other-rooms a{display:flex;justify-content:space-between;padding:10px 0;border-bottom:1px solid var(--c-border);font-size:15px}
+.other-rooms a:last-child{border-bottom:0}
+.other-rooms a span{color:var(--c-text-2)}
+.side-title{font-size:15px;font-weight:600;color:var(--c-text-2);margin:0 0 10px 12px}
+.prose h3{font-size:20px;margin-top:12px}
+.prose .tbl-wrap table{font-size:15px}
+.map-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:24px;align-items:start}
+.map-card{padding:24px 24px 16px}
+.map-card .mc-head{display:flex;flex-direction:column;gap:4px;padding-bottom:14px;margin-bottom:6px;border-bottom:1px solid var(--c-border)}
+.map-card .m-path,.map-tree .m-path{font-family:ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;font-size:12.5px;color:var(--c-text-2)}
+.map-tree{list-style:none;margin:0;padding:0}
+.map-tree li{padding:9px 0;border-bottom:1px dashed var(--c-border)}
+.map-tree li:last-child{border-bottom:0}
+.map-tree .m-row{display:flex;justify-content:space-between;align-items:center;gap:10px}
+.map-tree .m-row > div{min-width:0}
+.map-tree .m-path{display:block;margin-top:2px;overflow-wrap:anywhere}
+.map-tree a.m-t{color:var(--c-text);font-weight:500}
+.map-tree a.m-t:hover{color:var(--c-accent)}
+.map-tree span.m-t{color:var(--c-text-2);font-weight:500}
+.map-tree ul{list-style:none;margin:6px 0 0;padding:0 0 0 18px;border-left:2px solid var(--c-sand)}
+.map-tree ul li{padding:6px 0;border-bottom:0}
+.map-grp{font-size:12px;font-weight:600;letter-spacing:.06em;text-transform:uppercase;color:var(--c-text-2);padding:14px 0 2px!important;border-bottom:0!important}
+.acc-tag{font-size:12px;font-weight:500;padding:3px 8px;border-radius:6px;white-space:nowrap;flex:none}
+.acc-all{background:var(--c-ok-bg);color:var(--c-ok)}
+.acc-guest{background:var(--c-warn-bg);color:#8A6220}
+.acc-staff{background:var(--c-info-bg);color:var(--c-info)}
+.acc-admin{background:var(--c-err-bg);color:var(--c-err)}
+.map-legend{display:flex;flex-wrap:wrap;gap:12px 20px;align-items:center;margin-bottom:24px;font-size:14px;color:var(--c-text-2)}
+.nf-box{padding:64px 24px;text-align:center;border:1px dashed var(--c-border);border-radius:var(--r);background:var(--c-white)}
+.nf-code{font-size:88px;font-weight:600;color:var(--c-accent);line-height:1;letter-spacing:-.03em}
+@media (max-width:1100px){ .map-grid{grid-template-columns:1fr 1fr} }
+@media (max-width:900px){ .room-page{grid-template-columns:1fr} }
+@media (max-width:760px){ .map-grid{grid-template-columns:1fr} .room-buy .price{font-size:26px} }
+
+</style>
+<div id="app"></div>
+<div id="modal-root"></div>
+<div id="toasts" aria-live="polite"></div>
+<script>
+(() => {
+'use strict';
+
+/* ================= Утилиты ================= */
+const $ = (s, r = document) => r.querySelector(s);
+const $$ = (s, r = document) => [...r.querySelectorAll(s)];
+const pad = n => String(n).padStart(2, '0');
+const iso = d => `${d.getFullYear()}-${pad(d.getMonth() + 1)}-${pad(d.getDate())}`;
+const D = s => { const [y, m, d] = s.split('-').map(Number); return new Date(y, m - 1, d); };
+const addDays = (s, n) => { const d = D(s); d.setDate(d.getDate() + n); return iso(d); };
+const nights = (a, b) => Math.round((D(b) - D(a)) / 864e5);
+const ru = s => s ? s.split('-').reverse().join('.') : '';
+const dm = s => ru(s).slice(0, 5);
+const TODAY = iso(new Date());
+const money = n => new Intl.NumberFormat('ru-RU').format(Math.round(n)) + ' ₽';
+const esc = s => String(s ?? '').replace(/[&<>"']/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]));
+const plural = (n, a, b, c) => { n = Math.abs(n) % 100; const n1 = n % 10; if (n > 10 && n < 20) return c; if (n1 > 1 && n1 < 5) return b; if (n1 === 1) return a; return c; };
+const WD = ['вс', 'пн', 'вт', 'ср', 'чт', 'пт', 'сб'];
+const MONTHS = ['январь', 'февраль', 'март', 'апрель', 'май', 'июнь', 'июль', 'август', 'сентябрь', 'октябрь', 'ноябрь', 'декабрь'];
+const nowTime = () => { const d = new Date(); return `${pad(d.getHours())}:${pad(d.getMinutes())}`; };
+const opts = (arr, sel) => arr.map(v => { const [val, label] = Array.isArray(v) ? v : [v, v]; return `<option value="${esc(val)}" ${String(val) === String(sel) ? 'selected' : ''}>${esc(label)}</option>`; }).join('');
+const mondayOf = s => { const d = D(s); d.setDate(d.getDate() - ((d.getDay() + 6) % 7)); return iso(d); };
+const emailOk = s => /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(s);
+const phoneOk = s => (s.match(/\d/g) || []).length >= 10;
+
+const TK = ['std', 'cmf', 'fam', 'lux'];
+const STATUS = { pending: ['b-warn', 'Ожидает подтверждения'], confirmed: ['b-ok', 'Подтверждено'], rejected: ['b-err', 'Отклонено'], cancelled: ['b-gray', 'Отменено'], completed: ['b-gray', 'Завершено'] };
+const PAY = { paid: ['b-ok', 'Оплачено'], unpaid: ['b-err', 'Не оплачено'], refunded: ['b-info', 'Возврат выполнен'] };
+const RST = { clean: ['b-ok', 'Готов к заселению'], dirty: ['b-err', 'Требует уборки'], work: ['b-warn', 'Убирается'], occ: ['b-info', 'Занят гостем'], repair: ['b-gray', 'На ремонте'] };
+const FST = { new: ['b-err', 'Новая'], work: ['b-warn', 'В работе'], done: ['b-ok', 'Выполнена'] };
+const RVS = { pending: ['b-warn', 'На модерации'], published: ['b-ok', 'Опубликован'], hidden: ['b-gray', 'Скрыт'] };
+const ROLE = { admin: 'Администратор', maid: 'Горничная', tech: 'Техник', guest: 'Гость' };
+const UNIT = { guest_night: 'за гостя в сутки', guest: 'за гостя', once: 'за услугу' };
+const badge = (map, k) => map[k] ? `<span class="badge ${map[k][0]}">${map[k][1]}</span>` : '';
+
+const LOGO = `<svg width="34" height="28" viewBox="0 0 34 28" aria-hidden="true"><path d="M1 27 L12 8 L17 15 L22 6 L33 27 Z" fill="#72879F"/><path d="M12 8 L9.5 12.3 L12 11 L14 13 Z M22 6 L19.6 10 L22 9 L24.4 10.5 Z" fill="#fff"/><path d="M1 27 L8 17 L14 27Z" fill="#2F4A3A"/></svg>`;
+const BELL = `<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true"><path d="M6 16V11a6 6 0 1 1 12 0v5l1.5 2h-15z"/><path d="M10 20a2 2 0 0 0 4 0"/></svg>`;
+const ICONS = {
+  breakfast: '<path d="M5 9h11v4a5 5 0 0 1-5 5h-1a5 5 0 0 1-5-5z"/><path d="M16 10h1.5a2.5 2.5 0 0 1 0 5H16"/><path d="M8 3c0 2 2 2 2 4M12 3c0 2 2 2 2 4"/>',
+  ski: '<path d="M3 21 21 5"/><path d="M7 21 21 9"/><circle cx="16" cy="4" r="1.6"/>',
+  sauna: '<path d="M7 19c0-3 3-3 3-6s-3-3-3-6"/><path d="M12 19c0-3 3-3 3-6s-3-3-3-6"/><path d="M17 19c0-3 3-3 3-6s-3-3-3-6"/>',
+  tour: '<path d="M2 20 9 8l4 6 2.5-3.5L22 20z"/><path d="M9 8 7.5 10.5 9 10l1.2 1.4"/>',
+  transfer: '<rect x="4" y="5" width="16" height="12" rx="2"/><path d="M4 11h16M8 17v2M16 17v2"/><circle cx="8" cy="14" r=".8"/><circle cx="16" cy="14" r=".8"/>',
+  def: '<path d="M12 3l2.6 5.6 6 .7-4.5 4.1 1.2 6L12 16.5 6.7 19.4l1.2-6L3.4 9.3l6-.7z"/>'
+};
+const svcIcon = id => `<svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">${ICONS[id] || ICONS.def}</svg>`;
+
+/* ================= Демо-данные ================= */
+function calc(b, types, services) {
+  types = types || S.types; services = services || S.services;
+  const n = nights(b.in, b.out), g = (+b.adults) + (+b.children), t = types[b.type];
+  const lines = [{ label: `Проживание, ${n} ${plural(n, 'ночь', 'ночи', 'ночей')}`, sum: (t ? t.price : 0) * Math.max(n, 0) }];
+  for (const id of b.services || []) {
+    const s = services.find(x => x.id === id); if (!s) continue;
+    const sum = s.unit === 'guest_night' ? s.price * g * n : s.unit === 'guest' ? s.price * g : s.price;
+    lines.push({ label: s.name, sum });
+  }
+  return { lines, n, total: lines.reduce((a, l) => a + l.sum, 0) };
+}
+
+function seed() {
+  const types = {
+    std: { name: 'Стандарт', price: 4500, area: 18, cap: 2, feats: ['Двуспальная кровать', 'Душ', 'Wi‑Fi', 'Рабочий стол'], wall: '#E9DFD2', bl: '#72879F', desc: 'Уютный номер для одного или двух гостей с видом во двор. Подходит для коротких поездок.' },
+    cmf: { name: 'Комфорт', price: 7600, area: 24, cap: 2, feats: ['Вид на горы', 'Балкон', 'Мини‑бар', 'Чайная станция'], wall: '#E4E1D8', bl: '#B5653F', desc: 'Просторный номер с балконом и панорамой гор. Самый популярный выбор у пар.' },
+    fam: { name: 'Семейный', price: 12500, area: 36, cap: 4, feats: ['2 комнаты', 'Детская кровать', 'Кухня', 'Сушилка для снаряжения'], wall: '#DFE4E2', bl: '#2F4A3A', desc: 'Две комнаты и мини-кухня для отдыха с детьми. Есть место для хранения и сушки лыж.' },
+    lux: { name: 'Люкс', price: 13400, area: 42, cap: 2, feats: ['Камин', 'Ванна', 'Панорамные окна', 'Поздний выезд'], wall: '#E8DCCF', bl: '#7A5A44', desc: 'Номер с камином и панорамными окнами на хребет. Поздний выезд до 14:00 включён.' }
+  };
+  const st = { 101: 'clean', 102: 'dirty', 103: 'clean', 104: 'work', 105: 'clean', 106: 'clean', 107: 'dirty', 108: 'occ', 112: 'occ', 204: 'dirty', 205: 'clean', 206: 'work', 207: 'clean', 301: 'occ', 310: 'dirty' };
+  const rooms = [
+    ...['101', '102', '103', '104', '105', '106', '107', '108', '112'].map(no => ({ no, type: 'std', floor: 1 })),
+    ...['204', '205', '206', '207'].map(no => ({ no, type: 'cmf', floor: 2 })),
+    { no: '301', type: 'lux', floor: 3 }, { no: '310', type: 'fam', floor: 3 }
+  ].map(r => ({ ...r, status: st[r.no], cleaned: st[r.no] === 'clean' ? `${ru(TODAY)} 10:15` : '', by: '' }));
+  const services = [
+    { id: 'breakfast', name: 'Завтрак (шведский стол)', price: 650, unit: 'guest_night', desc: 'Шведский стол с 7:00 до 10:30, горячие блюда и домашняя выпечка.' },
+    { id: 'ski', name: 'Прокат горнолыжного снаряжения', price: 1200, unit: 'guest_night', desc: 'Лыжи или сноуборд, ботинки и шлем. Подбор по размеру на ресепшене.' },
+    { id: 'sauna', name: 'Сауна', price: 2500, unit: 'once', desc: 'Финская сауна до 6 человек, 1 час. Полотенца и травяной чай включены.' },
+    { id: 'tour', name: 'Экскурсия с инструктором', price: 3000, unit: 'guest', desc: 'Пешие и лыжные маршруты разной сложности с сертифицированным инструктором.' },
+    { id: 'transfer', name: 'Трансфер от вокзала', price: 1800, unit: 'once', desc: 'Встреча на вокзале или в аэропорту и доставка до гостиницы.' }
+  ];
+  const users = [
+    { email: 'ivanov@alpinist.local', first: 'Иван', last: 'Иванов', phone: '+7 900 111-22-33', role: 'guest', active: true, mail: true },
+    { email: 'novikova@alpinist.local', first: 'Екатерина', last: 'Новикова', phone: '+7 900 555-66-77', role: 'guest', active: true },
+    { email: 'kuznetsov@alpinist.local', first: 'Алексей', last: 'Кузнецов', phone: '+7 900 333-44-55', role: 'guest', active: true },
+    { email: 'lebedev@alpinist.local', first: 'Сергей', last: 'Лебедев', phone: '+7 900 444-55-66', role: 'guest', active: true },
+    { email: 'sokolova@alpinist.local', first: 'Мария', last: 'Соколова', phone: '+7 900 222-33-44', role: 'guest', active: true },
+    { email: 'smirnova@alpinist.local', first: 'Ольга', last: 'Смирнова', phone: '+7 900 777-88-99', role: 'guest', active: true },
+    { email: 'admin@alpinist.local', first: 'Александр', last: 'Остапенко', phone: '+7 900 000-00-01', role: 'admin', active: true },
+    { email: 'belova@alpinist.local', first: 'Анна', last: 'Белова', phone: '+7 900 000-00-03', role: 'admin', active: true },
+    { email: 'orlova@alpinist.local', first: 'Наталья', last: 'Орлова', phone: '+7 900 000-00-02', role: 'maid', active: true },
+    { email: 'kim@alpinist.local', first: 'Дарья', last: 'Ким', phone: '+7 900 000-00-04', role: 'maid', active: true },
+    { email: 'kovalev@alpinist.local', first: 'Игорь', last: 'Ковалёв', phone: '+7 900 000-00-05', role: 'tech', active: true }
+  ];
+  const U = Object.fromEntries(users.map(u => [u.email.split('@')[0], u]));
+  const B = (id, who, type, room, i, o, ad, ch, svc, pay, status, created, extra = {}) => {
+    const u = U[who];
+    const b = { id, email: u.email, name: `${u.first} ${u.last}`, phone: u.phone, type, room, in: i, out: o, adults: ad, children: ch, services: svc, pay, status, created, wish: '', reason: '', method: pay === 'unpaid' ? '' : 'card', ...extra };
+    b.total = calc(b, types, services).total; return b;
+  };
+  const bookings = [
+    B(52, 'ivanov', 'lux', '301', '2026-08-02', '2026-08-05', 2, 0, ['sauna'], 'paid', 'confirmed', '2026-07-10'),
+    B(65, 'kuznetsov', 'fam', '310', '2026-10-03', '2026-10-07', 3, 1, [], 'paid', 'confirmed', '2026-09-20'),
+    B(68, 'novikova', 'cmf', '205', '2026-10-10', '2026-10-13', 2, 0, ['breakfast'], 'paid', 'confirmed', '2026-09-28'),
+    B(71, 'sokolova', 'cmf', '206', '2026-10-15', '2026-10-19', 2, 0, ['ski'], 'paid', 'confirmed', '2026-10-01'),
+    B(73, 'smirnova', 'std', '103', '2026-10-12', '2026-10-14', 1, 0, [], 'unpaid', 'rejected', '2026-10-04', { reason: 'Номер выведен на ремонт на эти даты, предложили перенос.' }),
+    B(74, 'sokolova', 'lux', '301', '2026-10-20', '2026-10-24', 2, 0, [], 'paid', 'confirmed', '2026-10-02'),
+    B(75, 'lebedev', 'std', '105', '2026-11-07', '2026-11-09', 1, 0, [], 'refunded', 'cancelled', '2026-10-05'),
+    B(76, 'kuznetsov', 'fam', '310', '2026-11-01', '2026-11-05', 3, 1, ['breakfast'], 'unpaid', 'pending', '2026-10-07'),
+    B(77, 'smirnova', 'std', '108', '2026-10-19', '2026-10-22', 2, 0, ['breakfast'], 'paid', 'confirmed', '2026-10-05'),
+    B(78, 'lebedev', 'std', '112', '2026-10-20', '2026-10-23', 1, 0, [], 'paid', 'confirmed', '2026-10-06'),
+    B(80, 'novikova', 'std', '108', '2026-10-24', '2026-10-27', 2, 0, [], 'paid', 'pending', '2026-10-07'),
+    B(81, 'ivanov', 'cmf', '204', '2026-10-28', '2026-10-31', 2, 0, ['breakfast', 'ski'], 'paid', 'pending', '2026-10-20'),
+    B(86, 'ivanov', 'std', '101', '2026-12-27', '2027-01-03', 2, 0, ['transfer'], 'unpaid', 'confirmed', '2026-10-20')
+  ];
+  const reviews = [
+    { id: 1, email: 'sokolova@alpinist.local', name: 'Мария Соколова', type: 'cmf', rating: 5, text: 'Потрясающий вид с балкона, а персонал помог подобрать снаряжение по размеру.', date: '2026-10-19', status: 'published', bookingId: 71 },
+    { id: 2, email: 'lebedev@alpinist.local', name: 'Сергей Лебедев', type: 'std', rating: 5, text: 'Чисто, тихо, удобное онлайн‑бронирование. Подтверждение пришло на почту за час.', date: '2026-10-09', status: 'published' },
+    { id: 3, email: 'kuznetsov@alpinist.local', name: 'Алексей Кузнецов', type: 'fam', rating: 5, text: 'Отдыхали с ребёнком — просторно, есть кухня. Экскурсия с инструктором понравилась.', date: '2026-10-08', status: 'published', bookingId: 65 },
+    { id: 4, email: 'smirnova@alpinist.local', name: 'Ольга Смирнова', type: 'std', rating: 4, text: 'Хороший номер за свои деньги, завтраки выше всяких похвал.', date: '2026-09-30', status: 'published' },
+    { id: 5, email: 'novikova@alpinist.local', name: 'Екатерина Новикова', type: 'cmf', rating: 4, text: 'Хороший номер с балконом, но хотелось бы больше розеток у кровати.', date: '2026-10-14', status: 'pending', bookingId: 68 },
+    { id: 6, email: 'smirnova@alpinist.local', name: 'Ольга Смирнова', type: 'std', rating: 5, text: 'Второй раз у вас — снова всё отлично, спасибо горничным за чистоту!', date: '2026-10-21', status: 'pending' }
+  ];
+  const faults = [
+    { id: 1, date: '2026-10-20', time: '11:40', room: '206', equip: 'Сантехника', desc: 'Подтекает смеситель в ванной', urg: 'Средняя', author: 'Ким Д.', status: 'work', photo: '' },
+    { id: 2, date: '2026-10-21', time: '09:05', room: '107', equip: 'Освещение', desc: 'Не работает лампа у кровати', urg: 'Низкая', author: 'Орлова Н.', status: 'new', photo: '' }
+  ];
+  const notes = [
+    { id: 1, email: 'ivanov@alpinist.local', date: '20.10.2026 14:05', text: 'Бронирование #81 создано и ожидает подтверждения администратором.', read: false },
+    { id: 2, email: 'ivanov@alpinist.local', date: '20.10.2026 14:07', text: 'Оплата по бронированию #81 получена: 33 900 ₽.', read: false },
+    { id: 3, email: 'ivanov@alpinist.local', date: '20.10.2026 16:30', text: 'Бронирование #86 подтверждено. Ждём вас 27.12.2026!', read: true }
+  ];
+  const sIn = addDays(TODAY, 3);
+  return {
+    v: 1, types, rooms, services, users, bookings, reviews, faults, notes, shifts: {},
+    uid: null, route: 'home', params: {}, next: null, draft: null,
+    search: { in: sIn, out: addDays(sIn, 3), adults: 2, children: 0 },
+    filter: { types: [...TK], min: '', max: '', sort: 'price-asc' },
+    accTab: 'cur', rq: { q: '', status: 'all', type: 'all', from: '' }, cal: TODAY, week: mondayOf(TODAY),
+    modTab: 'pending', fTab: 'all', hk: 'all', revType: 'all', loginTab: 'login', rep: null, faultRoom: ''
+  };
+}
+
+const KEY = 'alpinist-portal-lr4-v1';
+function load() { try { const s = JSON.parse(localStorage.getItem(KEY) || 'null'); if (s && s.v === 1) return s; } catch (e) { } return null; }
+function save() { try { localStorage.setItem(KEY, JSON.stringify(S)); } catch (e) { } }
+let S = load() || seed();
+
+/* ================= Модель ================= */
+const me = () => S.users.find(u => u.email === S.uid) || null;
+const isGuest = () => { const u = me(); return !!u && u.role === 'guest'; };
+const fullName = u => `${u.first} ${u.last}`;
+const shortName = u => `${u.last} ${u.first[0]}.`;
+const ini = u => (u.first[0] + u.last[0]).toUpperCase();
+const getB = id => S.bookings.find(b => b.id === +id);
+const findUser = e => S.users.find(u => u.email.toLowerCase() === String(e).trim().toLowerCase());
+const nextId = arr => arr.reduce((m, x) => Math.max(m, x.id), 0) + 1;
+const ACTIVE = ['pending', 'confirmed'];
+const overlap = (a1, a2, b1, b2) => a1 < b2 && b1 < a2;
+const bst = b => (b.status === 'confirmed' && b.out <= TODAY) ? 'completed' : b.status;
+function freeRooms(type, i, o, except) {
+  return S.rooms.filter(r => r.type === type && r.status !== 'repair' && !S.bookings.some(b => b.id !== except && b.room === r.no && ACTIVE.includes(b.status) && overlap(i, o, b.in, b.out)));
+}
+const guestsLabel = b => `${b.adults} ${plural(b.adults, 'взрослый', 'взрослых', 'взрослых')}${+b.children ? `, ${b.children} ${plural(b.children, 'ребёнок', 'ребёнка', 'детей')}` : ''}`;
+const svcNames = b => (b.services || []).map(id => (S.services.find(s => s.id === id) || {}).name).filter(Boolean).join(', ');
+const svcPrice = s => `${money(s.price)} ${s.unit === 'once' ? '' : '/ ' + (s.unit === 'guest' ? 'чел.' : 'чел. в сутки')}`.trim();
+function notify(email, text) { if (!email) return; S.notes.push({ id: nextId(S.notes), email, date: `${ru(TODAY)} ${nowTime()}`, text, read: false }); }
+const occToday = r => S.bookings.find(b => b.room === r.no && b.status === 'confirmed' && b.in <= TODAY && TODAY < b.out);
+const staffHome = () => { const u = me(); return !u ? 'login' : u.role === 'admin' ? 'requests' : u.role === 'maid' ? 'cleaning' : 'faults'; };
+const stars = n => `<span class="stars" aria-label="Оценка ${n} из 5">${'★'.repeat(n)}<span class="off">${'★'.repeat(5 - n)}</span></span>`;
+
+/* ================= Иллюстрации ================= */
+function roomSvg(type, h = 190) {
+  const t = S.types[type] || { wall: '#E9DFD2', bl: '#B5653F' };
+  return `<svg viewBox="0 0 320 190" preserveAspectRatio="xMidYMid slice" width="100%" height="${h}" style="display:block" aria-hidden="true">
+<rect width="320" height="190" fill="${t.wall}"/><rect x="190" y="26" width="100" height="74" rx="4" fill="#fff"/><rect x="194" y="30" width="92" height="66" fill="#8FA2B8"/>
+<path d="M194 96 L220 60 L236 78 L254 52 L286 96Z" fill="#5E718A"/><path d="M254 52 L247 62 L261 62Z" fill="#fff"/><rect x="238" y="30" width="2" height="66" fill="#fff"/>
+<rect x="0" y="150" width="320" height="40" fill="#C9B79F"/><rect x="30" y="80" width="140" height="44" rx="6" fill="#7A5A44"/>
+<rect x="24" y="118" width="158" height="38" rx="6" fill="#F7F4EF"/><rect x="24" y="130" width="158" height="26" rx="4" fill="${t.bl}"/>
+<rect x="40" y="106" width="44" height="18" rx="7" fill="#fff"/><rect x="104" y="106" width="44" height="18" rx="7" fill="#fff"/>
+<rect x="190" y="128" width="30" height="28" rx="3" fill="#7A5A44"/><path d="M198 108 L212 108 L216 124 L194 124Z" fill="#E9D7B0"/></svg>`;
+}
+let HERO = '';
+function heroSvg() {
+  if (HERO) return HERO;
+  let s = 7; const rnd = () => (s = (s * 16807) % 2147483647) / 2147483647;
+  const w = 1440, h = 520; let trees = '';
+  for (let i = 0; i < 70; i++) {
+    const x = rnd() * (w + 40) - 20, sz = 40 + rnd() * 90, base = h - rnd() * 30, col = ['#22382D', '#2F4A3A', '#1E3027', '#34503F'][Math.floor(rnd() * 4)];
+    trees += `<path d="M${x | 0} ${(base - sz) | 0} L${(x - sz * .28) | 0} ${base | 0} L${(x + sz * .28) | 0} ${base | 0}Z" fill="${col}"/>`;
+  }
+  HERO = `<svg viewBox="0 0 ${w} ${h}" preserveAspectRatio="xMidYMid slice" width="100%" height="100%" aria-hidden="true"><defs><linearGradient id="sky" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#768AA2"/><stop offset=".75" stop-color="#B9A99A"/></linearGradient></defs>
+<rect width="${w}" height="${h}" fill="url(#sky)"/><circle cx="1050" cy="95" r="55" fill="#E9D7B0"/>
+<path d="M0 230 L170 190 L300 205 L430 140 L600 215 L760 150 L860 200 L980 120 L1120 210 L1270 160 L1440 80 L1440 ${h} L0 ${h}Z" fill="#8A9BB2"/>
+<path d="M430 140 L400 160 L455 162Z M980 120 L948 146 L1010 150Z M170 190 L140 205 L200 210Z" fill="#ECEAE6"/>
+<path d="M0 330 L210 260 L380 300 L560 240 L720 320 L900 250 L1080 330 L1260 270 L1440 300 L1440 ${h} L0 ${h}Z" fill="#5E718A"/>
+<path d="M0 430 L250 380 L470 420 L700 370 L940 430 L1180 390 L1440 420 L1440 ${h} L0 ${h}Z" fill="#46566B"/>${trees}</svg>`;
+  return HERO;
+}
+const MAP = `<svg viewBox="0 0 600 300" width="100%" height="260" preserveAspectRatio="xMidYMid slice" aria-label="Схема проезда"><rect width="600" height="300" fill="#EFEAE2"/>
+<path d="M0 210 C150 190 260 240 420 200 S600 170 600 170" stroke="#A9BCD0" stroke-width="18" fill="none"/>
+<path d="M0 120 L600 140" stroke="#fff" stroke-width="16"/><path d="M300 0 L330 300" stroke="#fff" stroke-width="14"/><path d="M80 0 L140 300" stroke="#fff" stroke-width="8"/><path d="M470 0 L430 300" stroke="#fff" stroke-width="8"/>
+<path d="M420 40 L480 60 L520 20 Z M500 70 L560 90 L580 50Z" fill="#C9D3CB"/><rect x="40" y="30" width="120" height="60" rx="6" fill="#E2D9CC"/><text x="100" y="66" text-anchor="middle" font-size="13" fill="#5B6570" font-family="Inter,sans-serif">Вокзал</text>
+<text x="300" y="112" font-size="13" fill="#5B6570" font-family="Inter,sans-serif">ул. Горная</text>
+<g transform="translate(352 152)"><path d="M0 -38 C-16 -38 -24 -26 -24 -16 C-24 0 0 18 0 18 C0 18 24 0 24 -16 C24 -26 16 -38 0 -38Z" fill="#B5653F"/><circle cx="0" cy="-17" r="8" fill="#fff"/></g>
+<rect x="380" y="140" width="150" height="30" rx="6" fill="#fff"/><text x="455" y="160" text-anchor="middle" font-size="13" font-weight="600" fill="#111" font-family="Inter,sans-serif">«Альпинист», д. 12</text></svg>`;
+
+/* ================= Общие части страниц ================= */
+function pubHeader() {
+  const u = me();
+  const nav = [['home', 'Главная'], ['rooms', 'Номера'], ['services', 'Услуги'], ['booking', 'Бронирование'], ['reviews', 'Отзывы'], ['contacts', 'Контакты']];
+  let right, mobile;
+  if (!u) {
+    right = `<a href="#" class="btn outline sm" data-go="login">Войти</a>`;
+    mobile = `<a href="#" class="m-only" data-go="login">Войти / Регистрация</a>`;
+  } else if (u.role === 'guest') {
+    const unread = S.notes.filter(n => n.email === u.email && !n.read).length;
+    right = `<div class="dd-wrap"><button class="user" data-act="dd" data-dd="user" aria-haspopup="true"><span class="avatar">${ini(u)}</span><span class="uname">${esc(fullName(u))}</span></button>
+      <div class="dropdown" id="dd-user" hidden><a href="#" data-go="acc-bookings">Мои бронирования</a><a href="#" data-go="acc-profile">Личные данные</a><a href="#" data-go="acc-reviews">Мои отзывы</a><a href="#" data-go="acc-notes">Уведомления ${unread ? `<span class="cnt">${unread}</span>` : ''}</a><div class="dd-sep"></div><button data-act="logout">Выйти</button></div></div>`;
+    mobile = `<a href="#" class="m-only" data-go="acc-bookings">Личный кабинет</a>`;
+  } else {
+    right = `<div class="dd-wrap"><button class="user" data-act="dd" data-dd="user"><span class="avatar acc">${ini(u)}</span><span class="uname">${esc(shortName(u))}</span></button>
+      <div class="dropdown" id="dd-user" hidden><a href="#" data-go="${staffHome()}">Служебный раздел</a><div class="dd-sep"></div><button data-act="logout">Выйти</button></div></div>`;
+    mobile = `<a href="#" class="m-only" data-go="${staffHome()}">Служебный раздел</a>`;
+  }
+  return `<header class="header"><div class="container"><a href="#" class="logo" data-go="home">${LOGO}<span>Гостиница «Альпинист»</span></a>
+  <nav class="nav" aria-label="Главное меню">${nav.map(([r, t]) => `<a href="#" data-go="${r}" class="${S.route === r ? 'active' : ''}">${t}</a>`).join('')}${mobile}</nav>
+  <div class="header-actions">${right}</div><button class="burger" data-act="burger" aria-label="Открыть меню"><i></i><i></i><i></i></button></div></header>`;
+}
+function footer() {
+  return `<footer class="footer"><div class="container"><div class="cols">
+  <div><a href="#" class="logo" data-go="home">${LOGO}<span>Гостиница «Альпинист»</span></a><p>Отдых у подножия гор: уютные номера, горнолыжное снаряжение, сауна и экскурсии с инструктором.</p></div>
+  <div><h4>Гостям</h4><ul><li><a href="#" data-go="rooms">Номера и цены</a></li><li><a href="#" data-go="services">Услуги</a></li><li><a href="#" data-go="booking">Бронирование</a></li><li><a href="#" data-go="reviews">Отзывы</a></li></ul></div>
+  <div><h4>Информация</h4><ul><li><a href="#" data-go="info" data-p='{"sec":"rules"}'>Правила проживания</a></li><li><a href="#" data-go="info" data-p='{"sec":"pay"}'>Оплата и возврат</a></li><li><a href="#" data-go="info" data-p='{"sec":"privacy"}'>Политика конфиденциальности</a></li><li><a href="#" data-go="sitemap">Карта сайта</a></li><li><a href="#" data-act="staff-login">Вход для сотрудников</a></li></ul></div>
+  <div><h4>Контакты</h4><ul><li>+7 (3532) 45‑12‑00</li><li>info@alpinist.local</li><li>Ресепшен — круглосуточно</li><li><a href="#" data-go="contacts">ул. Горная, 12</a></li></ul></div>
+  </div><div class="bottom"><span>© 2026 Гостиница «Альпинист» · учебный прототип портала (ЛР4) · <a href="#" data-act="reset">Сбросить демо-данные</a></span><span>Оплата: ЮKassa · МИР · Visa · Mastercard</span></div></div></footer>`;
+}
+const pageTitle = (title, crumbs = [], cur = '') => `<div class="page-title"><div class="container"><div class="crumbs">${crumbs.map(([r, t]) => `<a href="#" data-go="${r}">${t}</a> / `).join('')}<b>${cur || title}</b></div><h1>${title}</h1></div></div>`;
+const stCrumbs = (parts, cur) => `<div class="crumbs">Служебный раздел / ${parts.map(p => p + ' / ').join('')}<b>${cur}</b></div>`;
+
+/* ================= Публичные страницы ================= */
+const P = {};
+
+function searchForm() {
+  const s = S.search;
+  return `<form class="panel search" data-form="search">
+  <label class="field">Заезд<input class="input" type="date" name="in" value="${s.in}" min="${TODAY}" required></label>
+  <label class="field">Отъезд<input class="input" type="date" name="out" value="${s.out}" min="${addDays(TODAY, 1)}" required></label>
+  <label class="field">Взрослые<select class="input" name="adults">${opts([1, 2, 3, 4], s.adults)}</select></label>
+  <label class="field">Дети<select class="input" name="children">${opts([0, 1, 2, 3], s.children)}</select></label>
+  <button class="btn" type="submit">Найти номер</button></form>`;
+}
+const reviewCard = r => `<div class="card review">${stars(r.rating)}<p>«${esc(r.text)}»</p><div><h4>${esc(r.name)}</h4><div class="small">${(S.types[r.type] || {}).name || ''} · ${MONTHS[D(r.date).getMonth()]} ${D(r.date).getFullYear()}</div></div></div>`;
+const published = () => S.reviews.filter(r => r.status === 'published').sort((a, b) => b.date.localeCompare(a.date));
+
+P.home = () => {
+  const cards = TK.map(k => { const t = S.types[k]; return `<a href="#" class="card room-card" data-go="room" data-p='{"type":"${k}"}'>${roomSvg(k)}<div class="pad"><h3>${t.name}</h3><div class="small" style="margin:4px 0 12px">${t.area} м² · до ${t.cap} ${plural(t.cap, 'гостя', 'гостей', 'гостей')}</div><div class="price">от ${money(t.price)} <span>/ ночь</span></div></div></a>`; }).join('');
+  const serv = S.services.map(s => `<a href="#" class="srv-row" data-go="services"><h4>${esc(s.name)}</h4><div class="srv-price">${svcPrice(s)}</div><div class="small">${esc(s.desc)}</div></a>`).join('');
+  return `<section class="hero">${heroSvg()}<div class="hero-in"><h1 class="hero-title">Гостиница «Альпинист»</h1><p class="hero-sub">Отдых у подножия гор: уютные номера, горнолыжное снаряжение, сауна и экскурсии с инструктором</p></div></section>
+  <div class="container search-wrap">${searchForm()}</div>
+  <section class="section"><div class="container"><div class="section-head"><h2>Номера</h2><a href="#" class="btn outline sm" data-go="rooms">Все номера →</a></div><div class="grid4">${cards}</div></div></section>
+  <section class="section sand"><div class="container split"><div><h2>Услуги</h2><p class="muted mt16">Дополнительные услуги можно выбрать при бронировании или заказать на ресепшене.</p><a href="#" class="btn mt24" data-go="services">Подробнее об услугах</a></div><div>${serv}</div></div></section>
+  <section class="section"><div class="container"><div class="section-head"><h2>Отзывы гостей</h2><a href="#" class="btn outline sm" data-go="reviews">Все отзывы →</a></div><div class="grid3">${published().slice(0, 3).map(reviewCard).join('')}</div></div></section>`;
+};
+
+P.rooms = () => {
+  const s = S.search, f = S.filter;
+  const aside = `<form class="panel filter" data-form="filter"><h4>Параметры поиска</h4>
+    <label class="field">Заезд<input class="input" type="date" name="in" value="${s.in}" min="${TODAY}" required></label>
+    <label class="field">Отъезд<input class="input" type="date" name="out" value="${s.out}" min="${addDays(TODAY, 1)}" required></label>
+    <div class="grid2"><label class="field">Взрослые<select class="input" name="adults">${opts([1, 2, 3, 4], s.adults)}</select></label><label class="field">Дети<select class="input" name="children">${opts([0, 1, 2, 3], s.children)}</select></label></div>
+    <div class="field">Тип номера<div class="stack" style="gap:10px;margin-top:4px">${TK.map(k => `<label class="check"><input type="checkbox" name="type" value="${k}" ${f.types.includes(k) ? 'checked' : ''}>${S.types[k].name}</label>`).join('')}</div></div>
+    <div class="field">Стоимость за ночь, ₽<div class="grid2"><input class="input" type="number" name="min" min="0" step="500" placeholder="от" value="${esc(f.min)}"><input class="input" type="number" name="max" min="0" step="500" placeholder="до" value="${esc(f.max)}"></div></div>
+    <button class="btn" type="submit">Применить</button><button type="button" class="small link" data-act="filter-reset">Сбросить фильтры</button></form>`;
+  return pageTitle('Номера и цены', [['home', 'Главная']]) + `<section class="page"><div class="container aside-grid">${aside}<div class="stack" id="room-list">${roomList()}</div></div></section>`;
+};
+function roomList() {
+  const s = S.search, f = S.filter, n = nights(s.in, s.out);
+  const min = f.min === '' ? 0 : +f.min, max = f.max === '' ? Infinity : +f.max;
+  let ks = TK.filter(k => f.types.includes(k) && S.types[k].price >= min && S.types[k].price <= max);
+  const so = f.sort;
+  ks.sort((a, b) => so === 'price-desc' ? S.types[b].price - S.types[a].price : so === 'area' ? S.types[b].area - S.types[a].area : S.types[a].price - S.types[b].price);
+  const head = `<div class="row jc-b wrap"><span class="muted">Найдено: ${ks.length} · ${ru(s.in)}–${ru(s.out)}, ${guestsLabel(s)}</span>
+    <select class="input sm" style="width:auto" data-live="sort" aria-label="Сортировка">${opts([['price-asc', 'Сначала дешевле'], ['price-desc', 'Сначала дороже'], ['area', 'По площади']], so)}</select></div>`;
+  if (!ks.length) return head + `<div class="empty">Нет номеров по заданным параметрам. <a href="#" data-act="filter-reset">Сбросить фильтры</a></div>`;
+  return head + ks.map(k => {
+    const t = S.types[k], fits = (+s.adults) + (+s.children) <= t.cap, free = freeRooms(k, s.in, s.out).length;
+    const st = !fits ? `<span class="badge b-gray">Вмещает до ${t.cap} ${plural(t.cap, 'гостя', 'гостей', 'гостей')}</span>` : free ? `<span class="badge b-ok">Свободно ${free} ${plural(free, 'номер', 'номера', 'номеров')}</span>` : `<span class="badge b-err">Нет мест на выбранные даты</span>`;
+    return `<div class="card room-row"><div class="img" data-go="room" data-p='{"type":"${k}"}' title="Подробнее о номере">${roomSvg(k, '100%')}</div>
+    <div class="body"><h3><a href="#" data-go="room" data-p='{"type":"${k}"}'>${t.name}</a></h3><div class="small">${t.area} м² · до ${t.cap} ${plural(t.cap, 'гостя', 'гостей', 'гостей')}</div><div class="chips">${t.feats.map(x => `<span class="chip">${esc(x)}</span>`).join('')}</div><div>${st}</div></div>
+    <div class="side-p"><div style="text-align:right"><div class="price">${money(t.price)} <span>/ ночь</span></div><div class="small">${n} ${plural(n, 'ночь', 'ночи', 'ночей')} — ${money(t.price * n)}</div></div>
+    ${fits && free ? `<button class="btn" data-act="book" data-type="${k}">Забронировать</button>` : `<button class="btn" disabled>Нет мест</button>`}</div></div>`;
+  }).join('');
+}
+
+P.services = () => pageTitle('Услуги', [['home', 'Главная']]) + `<section class="page"><div class="container"><p class="muted" style="max-width:680px;margin-bottom:32px">Дополнительные услуги добавляются к бронированию на шаге «Услуги и данные гостя» или заказываются на ресепшене во время проживания. Стоимость рассчитывается автоматически.</p>
+  <div class="grid3">${S.services.map(s => `<div class="card svc-card"><div class="svc-ic">${svcIcon(s.id)}</div><h3>${esc(s.name)}</h3><p class="muted grow">${esc(s.desc)}</p><div class="price">${money(s.price)} <span>${UNIT[s.unit]}</span></div><button class="btn outline" data-act="svc-book" data-id="${s.id}">Добавить к бронированию</button></div>`).join('')}</div></div></section>`;
+
+P.reviews = () => {
+  const all = published(), list = S.revType === 'all' ? all : all.filter(r => r.type === S.revType);
+  const avg = all.length ? (all.reduce((a, r) => a + r.rating, 0) / all.length) : 0;
+  return pageTitle('Отзывы гостей', [['home', 'Главная']]) + `<section class="page"><div class="container">
+  <div class="head-row"><div class="row ai-c" style="gap:16px"><span style="font-size:40px;font-weight:600">${avg.toFixed(1).replace('.', ',')}</span><div>${stars(Math.round(avg))}<div class="small">${all.length} ${plural(all.length, 'отзыв', 'отзыва', 'отзывов')}</div></div></div><button class="btn" data-act="review-new">Оставить отзыв</button></div>
+  <div class="row wrap gap8" style="margin-bottom:24px">${[['all', 'Все номера'], ...TK.map(k => [k, S.types[k].name])].map(([v, t]) => `<button class="fchip ${S.revType === v ? 'on' : ''}" data-act="rev-type" data-v="${v}">${t}</button>`).join('')}</div>
+  ${list.length ? `<div class="grid3">${list.map(reviewCard).join('')}</div>` : '<div class="empty">Отзывов об этом типе номеров пока нет.</div>'}</div></section>`;
+};
+
+P.contacts = () => pageTitle('Контакты', [['home', 'Главная']]) + `<section class="page"><div class="container contact-grid">
+  <div><dl class="c-list"><dt>Адрес</dt><dd>ул. Горная, 12, пос. Альпийский</dd><dt>Телефон</dt><dd>+7 (3532) 45‑12‑00</dd><dt>E‑mail</dt><dd>info@alpinist.local</dd><dt>Ресепшен</dt><dd>круглосуточно</dd><dt>Заезд / выезд</dt><dd>с 14:00 / до 12:00</dd><dt>Как добраться</dt><dd>От вокзала 25 минут на такси или трансфере гостиницы (заказывается при бронировании).</dd></dl><div class="map">${MAP}</div></div>
+  <form class="card pad-l stack" data-form="feedback"><h3>Написать нам</h3><p class="small">Ответим на e‑mail в течение рабочего дня.</p>
+  <label class="field">Имя *<input class="input" name="name" value="${esc(me() ? fullName(me()) : '')}"></label>
+  <label class="field">E‑mail *<input class="input" type="email" name="email" value="${esc(me() ? me().email : '')}"></label>
+  <label class="field">Тема<select class="input" name="topic">${opts(['Вопрос о бронировании', 'Групповое размещение', 'Отзыв или жалоба', 'Другое'])}</select></label>
+  <label class="field">Сообщение *<textarea class="input" name="msg" rows="4" placeholder="Ваш вопрос"></textarea></label>
+  <button class="btn" type="submit">Отправить</button></form></div></section>`;
+
+const INFO = {
+  rules: ['Правила проживания', `<p>Правила действуют для всех гостей гостиницы «Альпинист» и помогают сделать отдых комфортным и безопасным.</p>
+  <h3>Заезд и выезд</h3><ul><li>Заезд с 14:00, выезд до 12:00. Ранний заезд и поздний выезд — по наличию, 50% стоимости суток.</li><li>При заселении нужен паспорт каждого взрослого гостя и свидетельство о рождении ребёнка.</li><li>Ключ-карту нужно сдать на ресепшене при выезде.</li></ul>
+  <h3>Во время проживания</h3><ul><li>Курение в номерах запрещено. Для сушки снаряжения используйте сушилку на 1 этаже.</li><li>Тишина в гостинице с 23:00 до 8:00.</li><li>Уборка номера — ежедневно с 10:00 до 16:00; табличку «Не беспокоить» горничные не нарушают.</li><li>О неисправностях в номере сообщите на ресепшен — заявка сразу уйдёт техническому персоналу.</li></ul>
+  <h3>Дети и животные</h3><ul><li>Дети до 5 лет размещаются бесплатно без дополнительного места.</li><li>Проживание с животными не предусмотрено.</li></ul>`],
+  pay: ['Оплата и возврат', `<p>Бронирование оплачивается онлайн на портале после выбора номера и услуг либо на ресепшене при заселении.</p>
+  <h3>Способы оплаты</h3><ul><li>Онлайн-оплата через ЮKassa: банковские карты МИР, Visa, Mastercard, СБП и SberPay.</li><li>На ресепшене — банковской картой или наличными.</li></ul>
+  <h3>Отмена бронирования</h3><div class="card tbl-wrap"><table><tr><th>Когда отменено</th><th>Возврат</th></tr><tr><td>Не позднее чем за 2 суток до заезда</td><td>100% стоимости</td></tr><tr><td>Менее чем за 2 суток до заезда</td><td>Стоимость бронирования за вычетом первых суток</td></tr><tr><td>Отказ администратора в бронировании</td><td>100% стоимости автоматически</td></tr></table></div>
+  <ul><li>Бронирование можно отменить в личном кабинете в разделе «Мои бронирования».</li><li>Деньги возвращаются на карту, с которой была оплата, в течение 3–5 рабочих дней.</li></ul>`],
+  privacy: ['Политика конфиденциальности', `<p>Гостиница обрабатывает ФИО, телефон и e‑mail гостей только для оформления бронирований и уведомлений о них, в соответствии с 152‑ФЗ «О персональных данных».</p>
+  <h3>Какие данные мы храним</h3><ul><li>Данные учётной записи: ФИО, телефон, e‑mail, пароль в виде хеша.</li><li>История бронирований, отзывы и уведомления.</li><li>Данные банковских карт обрабатывает платёжный сервис ЮKassa, портал их не хранит.</li></ul>
+  <h3>Защита данных</h3><ul><li>Передача данных — только по защищённому протоколу HTTPS.</li><li>Доступ сотрудников к данным гостей ограничен их ролью на портале.</li><li>Удалить учётную запись можно по запросу на info@alpinist.local.</li></ul>`]
+};
+P.info = () => {
+  const sec = INFO[S.params.sec] ? S.params.sec : 'rules', [title, body] = INFO[sec];
+  const nav = Object.entries(INFO).map(([k, [t]]) => `<a href="#" data-go="info" data-p='{"sec":"${k}"}' class="${k === sec ? 'on' : ''}">${t}</a>`).join('');
+  return pageTitle(title, [['home', 'Главная'], ['info', 'Информация для гостей']]) + `<section class="page"><div class="container acc-grid">
+  <aside class="panel acc-side"><div class="side-title">Информация для гостей</div><nav class="acc-nav" aria-label="Страницы раздела">${nav}</nav></aside>
+  <div class="prose">${body}<div class="row mt24"><a href="#" class="btn" data-go="booking">Забронировать номер</a><a href="#" class="btn ghost" data-go="contacts">Контакты</a></div></div></div></section>`;
+};
+
+/* ---------- Страница типа номера ---------- */
+P.room = () => {
+  const k = S.types[S.params.type] ? S.params.type : TK[0], t = S.types[k], s = S.search, n = nights(s.in, s.out);
+  const fits = (+s.adults) + (+s.children) <= t.cap, free = freeRooms(k, s.in, s.out).length;
+  const nums = S.rooms.filter(r => r.type === k).map(r => r.no).sort((a, b) => a.localeCompare(b, 'ru', { numeric: true }));
+  const revs = published().filter(r => r.type === k);
+  const st = !fits ? `<span class="badge b-gray">Вмещает до ${t.cap} ${plural(t.cap, 'гостя', 'гостей', 'гостей')}</span>` : free ? `<span class="badge b-ok">Свободно ${free} ${plural(free, 'номер', 'номера', 'номеров')}</span>` : `<span class="badge b-err">Нет мест на выбранные даты</span>`;
+  return pageTitle(t.name, [['home', 'Главная'], ['rooms', 'Номера и цены']]) + `<section class="page"><div class="container room-page">
+  <div class="stack" style="gap:32px"><div class="room-hero">${roomSvg(k, 400)}</div>
+  <div><h2 class="h2s">О номере</h2><p class="mt12">${esc(t.desc)}</p><div class="chips mt16">${t.feats.map(x => `<span class="chip">${esc(x)}</span>`).join('')}</div></div>
+  <dl class="dl"><dt>Площадь</dt><dd>${t.area} м²</dd><dt>Вместимость</dt><dd>до ${t.cap} ${plural(t.cap, 'гостя', 'гостей', 'гостей')}</dd><dt>Номера этого типа</dt><dd>${nums.join(', ')}</dd><dt>Заезд / выезд</dt><dd>с 14:00 / до 12:00</dd></dl>
+  <div><div class="head-row"><h3>Отзывы о номере</h3><a href="#" class="btn outline sm" data-go="reviews">Все отзывы →</a></div>${revs.length ? `<div class="grid2" style="gap:24px">${revs.slice(0, 2).map(reviewCard).join('')}</div>` : '<div class="empty">Об этом номере пока нет отзывов.</div>'}</div></div>
+  <aside class="stack sticky-card" style="gap:24px"><div class="card pad-l stack room-buy"><div><div class="price">${money(t.price)} <span>/ ночь</span></div><div class="small mt8">${ru(s.in)} – ${ru(s.out)}, ${guestsLabel(s)}</div></div>
+  <dl class="dl"><dt>${n} ${plural(n, 'ночь', 'ночи', 'ночей')}</dt><dd><b>${money(t.price * n)}</b></dd><dt>Наличие</dt><dd>${st}</dd></dl>
+  ${fits && free ? `<button class="btn w100" data-act="book" data-type="${k}">Забронировать</button>` : '<button class="btn w100" disabled>Нет мест</button>'}<a href="#" class="small link center" data-go="rooms">Изменить даты и параметры</a></div>
+  <div class="panel other-rooms"><h4 style="margin-bottom:6px">Другие номера</h4>${TK.filter(x => x !== k).map(x => `<a href="#" data-go="room" data-p='{"type":"${x}"}'>${S.types[x].name}<span>от ${money(S.types[x].price)}</span></a>`).join('')}</div></aside></div></section>`;
+};
+
+/* ---------- Структура портала: разделы и страницы (общая для карты сайта, адресов и заголовков) ---------- */
+const SLUG_T = { std: 'standart', cmf: 'komfort', fam: 'semejnyj', lux: 'lyuks' };
+const SLUG_I = { rules: 'pravila-prozhivaniya', pay: 'oplata-i-vozvrat', privacy: 'politika-konfidencialnosti' };
+const ACC = { all: ['acc-all', 'Все'], guest: ['acc-guest', 'Гость'], staff: ['acc-staff', 'Сотрудники'], maid: ['acc-staff', 'Горничная, админ.'], admin: ['acc-admin', 'Администратор'] };
+const STRUCT = [
+  { t: 'Публичная часть', path: '/', note: 'Открыта всем посетителям портала', items: [
+    { r: 'home', t: 'Главная', a: 'all' },
+    { r: 'rooms', t: 'Номера и цены', a: 'all', kids: TK.map(k => ({ r: 'room', p: { type: k }, t: S.types[k].name, a: 'all' })) },
+    { r: 'services', t: 'Услуги', a: 'all' },
+    { r: 'booking', t: 'Бронирование', a: 'guest', kids: [{ t: 'Бронирование оформлено', path: '/bronirovanie/podtverzhdenie/', a: 'guest' }] },
+    { r: 'reviews', t: 'Отзывы', a: 'all' },
+    { r: 'contacts', t: 'Контакты', a: 'all' },
+    { r: 'info', p: { sec: 'rules' }, path: '/informaciya/', t: 'Информация для гостей', a: 'all', kids: Object.keys(INFO).map(k => ({ r: 'info', p: { sec: k }, t: INFO[k][0], a: 'all' })) },
+    { r: 'login', t: 'Вход и регистрация', a: 'all' },
+    { r: 'sitemap', t: 'Карта сайта', a: 'all' }] },
+  { t: 'Личный кабинет гостя', path: '/lichnyj-kabinet/', note: 'Нужен вход под учётной записью гостя', items: [
+    { r: 'acc-bookings', t: 'Мои бронирования', a: 'guest' }, { r: 'acc-profile', t: 'Личные данные', a: 'guest' },
+    { r: 'acc-reviews', t: 'Мои отзывы', a: 'guest' }, { r: 'acc-notes', t: 'Уведомления', a: 'guest' }] },
+  { t: 'Служебный раздел', path: '/sluzhebnyj-razdel/', note: 'Только для сотрудников, пункты меню зависят от должности', items: [
+    { g: 'Бронирования' }, { r: 'requests', t: 'Заявки на бронирование', a: 'admin' }, { r: 'calendar', t: 'Календарь занятости', a: 'admin' },
+    { g: 'Гостиница' }, { r: 'fund', t: 'Номерной фонд', a: 'admin' }, { r: 'tariffs', t: 'Тарифы и услуги', a: 'admin' }, { r: 'moder', t: 'Отзывы гостей', a: 'admin' }, { r: 'reports', t: 'Отчёты', a: 'admin' },
+    { g: 'Персонал' }, { r: 'staff', t: 'Сотрудники', a: 'admin' }, { r: 'schedule', t: 'График смен', a: 'staff' }, { r: 'faults', t: 'Заявки о неисправностях', a: 'staff' }, { r: 'cleaning', t: 'Уборка номеров', a: 'maid' },
+    { g: 'Профиль' }, { r: 'profile', t: 'Мои данные', a: 'staff' }] }
+];
+const PATH = {
+  home: '/', rooms: '/nomera/', services: '/uslugi/', booking: '/bronirovanie/', reviews: '/otzyvy/', contacts: '/kontakty/', login: '/vhod/', sitemap: '/karta-sajta/',
+  'acc-bookings': '/lichnyj-kabinet/bronirovaniya/', 'acc-profile': '/lichnyj-kabinet/lichnye-dannye/', 'acc-reviews': '/lichnyj-kabinet/moi-otzyvy/', 'acc-notes': '/lichnyj-kabinet/uvedomleniya/',
+  requests: '/sluzhebnyj-razdel/zayavki/', calendar: '/sluzhebnyj-razdel/kalendar/', fund: '/sluzhebnyj-razdel/nomernoj-fond/', tariffs: '/sluzhebnyj-razdel/tarify-i-uslugi/',
+  moder: '/sluzhebnyj-razdel/otzyvy/', reports: '/sluzhebnyj-razdel/otchety/', staff: '/sluzhebnyj-razdel/sotrudniki/', schedule: '/sluzhebnyj-razdel/grafik-smen/',
+  faults: '/sluzhebnyj-razdel/neispravnosti/', cleaning: '/sluzhebnyj-razdel/uborka/', profile: '/sluzhebnyj-razdel/moi-dannye/'
+};
+function pathOf(r, p = {}) {
+  if (r === 'room') return '/nomera/' + (SLUG_T[p.type] || SLUG_T.std) + '/';
+  if (r === 'info') return '/informaciya/' + (SLUG_I[p.sec] || SLUG_I.rules) + '/';
+  if (r === 'booking' && S.draft && S.draft.step === 4) return '/bronirovanie/podtverzhdenie/';
+  if (r === 'notfound') return p.path || '/404/';
+  return PATH[r] || '/';
+}
+function routeOf(path) {
+  path = ('/' + decodeURIComponent(path || '').replace(/^#/, '').replace(/^\/+/, '').split('?')[0]).replace(/\/*$/, '/');
+  for (const r in PATH) if (PATH[r] === path) return { r, p: {} };
+  let m = path.match(/^\/nomera\/([a-z-]+)\/$/);
+  if (m) { const k = Object.keys(SLUG_T).find(x => SLUG_T[x] === m[1]); if (k) return { r: 'room', p: { type: k } }; }
+  m = path.match(/^\/informaciya\/(?:([a-z-]+)\/)?$/);
+  if (m) { const k = m[1] ? Object.keys(SLUG_I).find(x => SLUG_I[x] === m[1]) : 'rules'; if (k) return { r: 'info', p: { sec: k } }; }
+  if (path === '/bronirovanie/podtverzhdenie/') return { r: 'booking', p: {} };
+  if (path === '/lichnyj-kabinet/') return { r: 'acc-bookings', p: {} };
+  if (path === '/sluzhebnyj-razdel/') { const u = me(); return { r: u && u.role !== 'guest' ? staffHome() : 'requests', p: {} }; }
+  return { r: 'notfound', p: { path } };
+}
+function titleOf(r, p = {}) {
+  if (r === 'room') return (S.types[p.type] || S.types.std).name;
+  if (r === 'info') return (INFO[p.sec] || INFO.rules)[0];
+  if (r === 'notfound') return 'Страница не найдена';
+  if (r === 'login') return p.staff ? 'Вход для сотрудников' : 'Вход и регистрация';
+  for (const s of STRUCT) for (const it of s.items) if (it.r === r) return it.t;
+  return '';
+}
+
+/* ---------- Карта сайта ---------- */
+const accTag = a => `<span class="acc-tag ${ACC[a][0]}">${ACC[a][1]}</span>`;
+function mapItem(it) {
+  if (it.g) return `<li class="map-grp">${it.g}</li>`;
+  const path = it.path || pathOf(it.r, it.p || {});
+  const title = it.r ? `<a href="#" class="m-t" data-go="${it.r}" data-p='${JSON.stringify(it.p || {})}'>${it.t}</a>` : `<span class="m-t">${it.t}</span>`;
+  return `<li><div class="m-row"><div>${title}</div>${accTag(it.a)}</div><span class="m-path">${path}</span>${it.kids ? `<ul>${it.kids.map(mapItem).join('')}</ul>` : ''}</li>`;
+}
+P.sitemap = () => {
+  const total = STRUCT.reduce((a, s) => a + s.items.reduce((b, it) => b + (it.g ? 0 : 1 + (it.kids ? it.kids.length : 0)), 0), 0);
+  return pageTitle('Карта сайта', [['home', 'Главная']]) + `<section class="page"><div class="container">
+  <p class="muted" style="max-width:760px;margin-bottom:20px">Портал состоит из трёх разделов: публичной части для всех посетителей, личного кабинета гостя и служебного раздела для сотрудников гостиницы — всего ${total} ${plural(total, 'страница', 'страницы', 'страниц')}. Под названием каждой страницы указан её адрес.</p>
+  <div class="map-legend"><span>Доступ:</span>${['all', 'guest', 'staff', 'admin'].map(a => `<span class="row gap8">${accTag(a)}${{ all: 'все посетители', guest: 'авторизованный гость', staff: 'все сотрудники', admin: 'только администратор' }[a]}</span>`).join('')}</div>
+  <div class="map-grid">${STRUCT.map(s => `<div class="card map-card"><div class="mc-head"><h3>${s.t}</h3><span class="m-path">${s.path}</span><span class="small">${s.note}</span></div><ul class="map-tree">${s.items.map(mapItem).join('')}</ul></div>`).join('')}</div></div></section>`;
+};
+
+/* ---------- Страница не найдена ---------- */
+P.notfound = () => pageTitle('Страница не найдена', [['home', 'Главная']]) + `<section class="page"><div class="container"><div class="nf-box">
+  <div class="nf-code">404</div><p class="mt16" style="font-size:17px;color:var(--c-text)">Страницы по адресу <b class="nowrap">${esc(S.params.path || '')}</b> на портале нет.</p><p class="small mt8">Возможно, она была перемещена или в адресе допущена опечатка.</p>
+  <div class="row mt24" style="justify-content:center"><a href="#" class="btn" data-go="home">На главную</a><a href="#" class="btn ghost" data-go="sitemap">Карта сайта</a></div></div></div></section>`;
+
+P.login = () => {
+  const tab = S.loginTab, u = me(), staff = S.params.staff;
+  const title = staff ? 'Вход для сотрудников' : 'Вход и регистрация';
+  const loginF = `<form class="stack" data-form="login"><label class="field">E‑mail<input class="input" type="email" name="email" autocomplete="username" placeholder="name@example.ru"></label><label class="field">Пароль<input class="input" type="password" name="pass" autocomplete="current-password"></label><button class="btn" type="submit">Войти</button></form>`;
+  const regF = `<form class="stack" data-form="register"><div class="grid2"><label class="field">Фамилия *<input class="input" name="last"></label><label class="field">Имя *<input class="input" name="first"></label></div><label class="field">Телефон *<input class="input" type="tel" name="phone" placeholder="+7 900 000-00-00"></label><label class="field">E‑mail *<input class="input" type="email" name="email"></label><div class="grid2"><label class="field">Пароль *<input class="input" type="password" name="pass" autocomplete="new-password"></label><label class="field">Повторите пароль *<input class="input" type="password" name="pass2" autocomplete="new-password"></label></div><label class="check"><input type="checkbox" name="agree">Согласен на обработку персональных данных</label><button class="btn" type="submit">Зарегистрироваться</button></form>`;
+  const demo = [['ivanov@alpinist.local', 'Гость', 'Иван Иванов'], ['admin@alpinist.local', 'Администратор', 'Остапенко Александр'], ['orlova@alpinist.local', 'Горничная', 'Орлова Наталья']];
+  return pageTitle(title, [['home', 'Главная']]) + `<section class="page"><div class="container"><div class="auth stack" style="gap:24px">
+  ${u ? `<div class="note">Вы вошли как ${esc(fullName(u))}. Вход под другой учётной записью завершит текущий сеанс.</div>` : ''}
+  <div class="card pad-l">${staff ? '' : `<div class="tabs" role="tablist"><button class="${tab === 'login' ? 'on' : ''}" data-act="login-tab" data-v="login">Вход</button><button class="${tab === 'reg' ? 'on' : ''}" data-act="login-tab" data-v="reg">Регистрация</button></div>`}
+  ${staff || tab === 'login' ? loginF : regF}</div>
+  <div class="card pad-l"><h4>Демо-доступ</h4><p class="small mt8" style="margin-bottom:14px">Прототип для лабораторной работы: войдите под готовой учётной записью одной кнопкой (для обычного входа подходит любой пароль).</p>
+  <div class="demo">${demo.map(([e, r, n]) => `<button data-act="demo" data-email="${e}"><span><b>${r}</b><br><span class="small">${n} · ${e}</span></span><span class="link">Войти</span></button>`).join('')}</div></div></div></div></section>`;
+};
+
+/* ---------- Бронирование ---------- */
+function newDraft(p = {}) { const s = S.search; return { step: 1, type: p.type || '', in: s.in, out: s.out, adults: s.adults, children: s.children, services: p.svc ? [p.svc] : [], guest: null, wish: '', method: 'card', bookingId: null }; }
+function prepDraft(p) {
+  if (p.pay) { const b = getB(p.pay); if (b) { S.draft = { step: 3, type: b.type, in: b.in, out: b.out, adults: b.adults, children: b.children, services: [...b.services], guest: null, wish: b.wish, method: 'card', bookingId: b.id }; return; } }
+  if (p.new || !S.draft || S.draft.step === 4) S.draft = newDraft(p);
+  if (p.type) S.draft.type = p.type;
+  if (p.svc && !S.draft.services.includes(p.svc)) S.draft.services.push(p.svc);
+}
+P.booking = () => {
+  const d = S.draft || (S.draft = newDraft());
+  if (d.step === 2 && !isGuest()) d.step = 1;
+  const steps = ['Даты и номер', 'Услуги и данные гостя', 'Оплата'];
+  const stepper = `<div class="stepper">${steps.map((t, i) => { const n = i + 1, cls = d.step > n ? 'done' : d.step === n ? 'cur' : ''; const can = d.step > n && !d.bookingId; return `${i ? '<div class="step-line"></div>' : ''}<${can ? `button data-act="to-step" data-v="${n}"` : 'div'} class="step ${cls}"><span class="dot">${d.step > n ? '✓' : n}</span><span class="lbl">${t}</span></${can ? 'button' : 'div'}>`; }).join('')}</div>`;
+  let main = '';
+  if (d.step === 1) main = step1();
+  else if (d.step === 2) main = step2();
+  else if (d.step === 3) main = step3();
+  else main = step4();
+  return pageTitle('Бронирование номера', [['home', 'Главная'], ['rooms', 'Номера']]) + `<section class="page"><div class="container">${stepper}<div class="bk-grid"><div class="stack" style="gap:24px">${main}</div><aside class="panel summary" id="summary">${summaryInner()}</aside></div></div></section>`;
+};
+function typeOptions() {
+  const d = S.draft;
+  return TK.map(k => {
+    const t = S.types[k], fits = (+d.adults) + (+d.children) <= t.cap, valid = d.out > d.in, free = valid ? freeRooms(k, d.in, d.out).length : 0, dis = !fits || !free;
+    const st = !fits ? `<span class="badge b-gray">До ${t.cap} ${plural(t.cap, 'гостя', 'гостей', 'гостей')}</span>` : !valid ? '' : free ? `<span class="badge b-ok">Свободно: ${free}</span>` : `<span class="badge b-err">Нет мест</span>`;
+    return `<label class="type-opt ${dis ? 'dis' : ''} ${d.type === k ? 'on' : ''}"><input type="radio" name="type" value="${k}" data-live="draft" ${d.type === k ? 'checked' : ''} ${dis ? 'disabled' : ''}><span class="to-img">${roomSvg(k, '100%')}</span><span class="to-body"><b>${t.name}</b><span class="small">${t.area} м² · ${t.feats.slice(0, 2).join(', ')}</span>${st}</span><span class="to-price">${money(t.price)}<small>за ночь</small></span></label>`;
+  }).join('');
+}
+function step1() {
+  const d = S.draft;
+  return `<div class="card pad-l stack" style="gap:20px"><h3>Даты и гости</h3>
+  <div class="grid2"><label class="field">Заезд<input class="input" type="date" name="in" value="${d.in}" min="${TODAY}" data-live="draft"></label><label class="field">Отъезд<input class="input" type="date" name="out" value="${d.out}" min="${addDays(TODAY, 1)}" data-live="draft"></label>
+  <label class="field">Взрослые<select class="input" name="adults" data-live="draft">${opts([1, 2, 3, 4], d.adults)}</select></label><label class="field">Дети<select class="input" name="children" data-live="draft">${opts([0, 1, 2, 3], d.children)}</select></label></div>
+  <h3 class="mt8">Тип номера</h3><div class="type-list" id="types">${typeOptions()}</div>
+  <div class="row jc-e"><button class="btn" data-act="next1">Далее</button></div></div>`;
+}
+function step2() {
+  const d = S.draft, u = me();
+  if (!d.guest) d.guest = { last: u.last, first: u.first, phone: u.phone, email: u.email };
+  const g = d.guest;
+  const svc = S.services.map(s => `<label class="svc-check"><input type="checkbox" value="${s.id}" data-live="svc" ${d.services.includes(s.id) ? 'checked' : ''}><span><span style="font-weight:500">${esc(s.name)}</span><span class="small" style="display:block">${svcPrice(s)}</span></span><b id="sv-${s.id}">${d.services.includes(s.id) ? money(svcSum(s, d)) : '—'}</b></label>`).join('');
+  return `<div class="card pad-l" id="bk-guest"><h3 style="margin-bottom:20px">Данные гостя</h3><div class="grid2">
+  <label class="field">Фамилия *<input class="input" name="last" value="${esc(g.last)}" data-live="guest"></label><label class="field">Имя *<input class="input" name="first" value="${esc(g.first)}" data-live="guest"></label>
+  <label class="field">Телефон *<input class="input" type="tel" name="phone" value="${esc(g.phone)}" data-live="guest"></label><label class="field">E‑mail *<input class="input" type="email" name="email" value="${esc(g.email)}" data-live="guest"></label></div>
+  <label class="field mt16">Пожелания к заселению<textarea class="input" name="wish" data-live="guest" placeholder="Например: поздний заезд после 22:00">${esc(d.wish)}</textarea></label></div>
+  <div class="card pad-l"><h3 style="margin-bottom:8px">Дополнительные услуги</h3><p class="small">Выберите услуги — стоимость сразу добавится к итогу.</p>${svc}</div>
+  <div class="row jc-b"><button class="btn ghost" data-act="to-step" data-v="1">← Назад</button><button class="btn" data-act="create">Перейти к оплате</button></div>`;
+}
+const svcSum = (s, d) => { const n = nights(d.in, d.out), g = (+d.adults) + (+d.children); return s.unit === 'guest_night' ? s.price * g * n : s.unit === 'guest' ? s.price * g : s.price; };
+function step3() {
+  const d = S.draft, b = getB(d.bookingId);
+  if (!b) return `<div class="empty">Бронирование не найдено. <a href="#" data-act="new-booking">Начать заново</a></div>`;
+  if (b.pay === 'paid') return `<div class="card pad-l"><h3>Бронирование #${b.id} уже оплачено</h3><div class="row mt16"><a href="#" class="btn" data-go="acc-bookings">Мои бронирования</a></div></div>`;
+  const m = d.method || 'card';
+  const methods = [['card', 'Банковская карта', 'МИР, Visa, Mastercard'], ['sbp', 'СБП', 'Оплата по QR-коду в приложении банка'], ['sber', 'SberPay', 'Подтверждение в приложении СберБанк Онлайн']];
+  return `<div class="card pad-l"><h3>Оплата бронирования #${b.id}</h3><p class="muted mt8">Платёж проводится через сервис ЮKassa. После оплаты бронирование передаётся администратору на подтверждение.</p>
+  <div class="pay-list" id="pay-list">${methods.map(([v, t, s]) => `<label class="pay-opt ${m === v ? 'on' : ''}"><input type="radio" name="method" value="${v}" data-live="method" ${m === v ? 'checked' : ''}><span><b>${t}</b><span class="small">${s}</span></span></label>`).join('')}</div>
+  <div class="note">Демонстрационный режим: оплата имитируется, платёжные данные не запрашиваются и никуда не передаются.</div>
+  <div class="row wrap mt24"><button class="btn" data-act="pay" id="pay-btn">Оплатить ${money(b.total)}</button><button class="btn ghost" data-act="pay-later">Оплатить позже</button></div></div>`;
+}
+function step4() {
+  const b = getB(S.draft.bookingId);
+  if (!b) return '';
+  return `<div class="card done"><div class="done-ic">✓</div><h2>Бронирование #${b.id} оформлено</h2><p class="muted mt12" style="max-width:520px;margin-left:auto;margin-right:auto">${b.pay === 'paid' ? 'Оплата получена. ' : 'Бронирование ожидает оплаты — оплатить можно в личном кабинете. '}Администратор подтвердит бронирование, уведомление придёт на ${esc(b.email)}.</p>
+  <div class="row wrap mt24"><a href="#" class="btn" data-go="acc-bookings">Мои бронирования</a><a href="#" class="btn ghost" data-go="home">На главную</a></div></div>`;
+}
+function summaryInner() {
+  const d = S.draft, b = d.bookingId ? getB(d.bookingId) : null, src = b || d;
+  if (!src.type) return `<h3>Ваше бронирование</h3><p class="muted mt12">Выберите даты и тип номера — здесь появится расчёт стоимости.</p>`;
+  const t = S.types[src.type], c = calc(src), valid = src.out > src.in;
+  const rows = [['Заезд', `${ru(src.in)}, с 14:00`], ['Отъезд', `${ru(src.out)}, до 12:00`], ...(valid ? c.lines.map(l => [l.label, money(l.sum)]) : [])];
+  const btn = d.step === 1 ? `<button class="btn w100" data-act="next1">Далее</button>` : d.step === 2 ? `<button class="btn w100" data-act="create">Перейти к оплате</button>` : '';
+  return `<h3>Ваше бронирование</h3><div class="sum-img">${roomSvg(src.type, 150)}</div><h4>${t.name}${b ? ` · номер ${b.room}` : ''}</h4><div class="small">${guestsLabel(src)}</div>
+  <dl class="sum">${rows.map(([a, v]) => `<dt>${a}</dt><dd>${v}</dd>`).join('')}</dl>
+  ${valid ? `<div class="total"><span style="font-weight:600">Итого</span><b class="tnum">${money(b ? b.total : c.total)}</b></div>` : '<p class="small err-text mt12">Дата отъезда должна быть позже даты заезда</p>'}
+  ${btn}<p class="small center mt12">Оплата через ЮKassa. Бесплатная отмена до ${ru(addDays(src.in, -2))}</p>`;
+}
+
+/* ---------- Личный кабинет ---------- */
+function accShell(active, inner) {
+  const u = me(), unread = S.notes.filter(n => n.email === u.email && !n.read).length;
+  const items = [['acc-bookings', 'Мои бронирования'], ['acc-profile', 'Личные данные'], ['acc-reviews', 'Мои отзывы'], ['acc-notes', `Уведомления${unread ? ` <span class="cnt">${unread}</span>` : ''}`]];
+  return pageTitle('Личный кабинет', [['home', 'Главная'], ['acc-bookings', 'Личный кабинет']], titleOf(active)) + `<section class="page"><div class="container acc-grid"><aside class="panel acc-side"><div class="acc-user"><span class="avatar lg">${ini(u)}</span><div><h4>${esc(fullName(u))}</h4><div class="small">${esc(u.email)}</div></div></div>
+  <nav class="acc-nav">${items.map(([r, t]) => `<a href="#" data-go="${r}" class="${active === r ? 'on' : ''}">${t}</a>`).join('')}<a href="#" data-act="logout" class="muted">Выйти</a></nav></aside><div class="stack" style="gap:0">${inner}</div></div></section>`;
+}
+function accCard(b) {
+  const s = bst(b), t = S.types[b.type], n = nights(b.in, b.out), acts = [];
+  if (ACTIVE.includes(s)) {
+    if (b.pay === 'unpaid') acts.push(`<a href="#" class="btn sm" data-go="booking" data-p='{"pay":${b.id}}'>Оплатить</a>`);
+    acts.push(`<button class="btn danger sm" data-act="cancel-b" data-id="${b.id}">Отменить</button>`);
+  }
+  if (s === 'completed') { const rv = S.reviews.find(r => r.bookingId === b.id); acts.push(rv ? `<span class="small">Отзыв ${rv.status === 'published' ? 'опубликован' : 'на модерации'}</span>` : `<button class="btn outline sm" data-act="review-new" data-id="${b.id}">Оставить отзыв</button>`); }
+  acts.push(`<button class="btn ghost sm" data-act="b-info" data-id="${b.id}">Подробнее</button>`);
+  return `<div class="card bk-card"><div class="bk-img">${roomSvg(b.type, '100%')}</div><div class="bk-body"><div class="row wrap gap8"><span class="small nowrap">Бронирование #${b.id}</span>${badge(STATUS, s)}${badge(PAY, b.pay)}</div>
+  <h3>${t ? t.name : ''} · номер ${b.room}</h3><div class="muted" style="font-size:15px">${dm(b.in)} – ${ru(b.out)} · ${n} ${plural(n, 'ночь', 'ночи', 'ночей')} · ${guestsLabel(b)}</div><div class="small">Услуги: ${svcNames(b) || 'не выбраны'}</div>
+  ${b.reason && ['rejected', 'cancelled'].includes(b.status) ? `<div class="small err-text">Причина: ${esc(b.reason)}</div>` : ''}</div>
+  <div class="bk-side"><div class="price">${money(b.total)}</div><div class="row wrap gap8 jc-e">${acts.join('')}</div></div></div>`;
+}
+P['acc-bookings'] = () => {
+  const u = me(), mine = S.bookings.filter(b => b.email === u.email).sort((a, b) => b.in.localeCompare(a.in));
+  const g = { cur: mine.filter(b => ACTIVE.includes(bst(b))).reverse(), done: mine.filter(b => bst(b) === 'completed'), canc: mine.filter(b => ['cancelled', 'rejected'].includes(b.status)) };
+  const tab = S.accTab in g ? S.accTab : 'cur', list = g[tab];
+  const tabs = `<div class="tabs">${[['cur', 'Текущие'], ['done', 'Завершённые'], ['canc', 'Отменённые']].map(([k, t]) => `<button class="${tab === k ? 'on' : ''}" data-act="acc-tab" data-v="${k}">${t} (${g[k].length})</button>`).join('')}</div>`;
+  return accShell('acc-bookings', `<div class="head-row"><h2 class="h2s">Мои бронирования</h2><button class="btn" data-act="new-booking">+ Новое бронирование</button></div>${tabs}<div class="stack">${list.length ? list.map(accCard).join('') : `<div class="empty">Здесь пока пусто. <a href="#" data-act="new-booking">Забронировать номер</a></div>`}</div>`);
+};
+P['acc-profile'] = () => {
+  const u = me();
+  return accShell('acc-profile', `<h2 class="h2s" style="margin-bottom:20px">Личные данные</h2><form class="card pad-l stack" data-form="profile"><div class="grid2"><label class="field">Фамилия *<input class="input" name="last" value="${esc(u.last)}"></label><label class="field">Имя *<input class="input" name="first" value="${esc(u.first)}"></label>
+  <label class="field">Телефон *<input class="input" type="tel" name="phone" value="${esc(u.phone)}"></label><label class="field">E‑mail<input class="input" name="email" value="${esc(u.email)}" readonly></label></div>
+  <label class="check"><input type="checkbox" name="mail" ${u.mail !== false ? 'checked' : ''}>Получать уведомления о бронированиях на e‑mail</label>
+  <h4 class="mt8">Смена пароля</h4><div class="grid2"><label class="field">Новый пароль<input class="input" type="password" name="pass" autocomplete="new-password"></label><label class="field">Повторите пароль<input class="input" type="password" name="pass2" autocomplete="new-password"></label></div>
+  <div class="row jc-e"><button class="btn" type="submit">Сохранить</button></div></form>`);
+};
+P['acc-reviews'] = () => {
+  const u = me(), mine = S.reviews.filter(r => r.email === u.email).sort((a, b) => b.date.localeCompare(a.date));
+  return accShell('acc-reviews', `<div class="head-row"><h2 class="h2s">Мои отзывы</h2><button class="btn" data-act="review-new">Оставить отзыв</button></div>
+  <div class="stack">${mine.length ? mine.map(r => `<div class="card review"><div class="row jc-b wrap">${stars(r.rating)}${badge(RVS, r.status)}</div><p>«${esc(r.text)}»</p><div class="small">${S.types[r.type]?.name || ''} · ${ru(r.date)}</div></div>`).join('') : '<div class="empty">Вы ещё не оставляли отзывов.</div>'}</div>`);
+};
+P['acc-notes'] = () => {
+  const u = me(), list = S.notes.filter(n => n.email === u.email).sort((a, b) => b.id - a.id);
+  return accShell('acc-notes', `<div class="head-row"><h2 class="h2s">Уведомления</h2>${list.some(n => !n.read) ? '<button class="btn ghost sm" data-act="notes-read">Отметить все как прочитанные</button>' : ''}</div>
+  <div class="card">${list.length ? list.map(n => `<div class="note-row"><span class="note-dot ${n.read ? 'read' : ''}"></span><div><div style="${n.read ? '' : 'font-weight:500'}">${esc(n.text)}</div><div class="small">${n.date} · копия отправлена на ${esc(u.email)}</div></div></div>`).join('') : '<div class="empty" style="border:0">Уведомлений нет.</div>'}</div>`);
+};
+
+/* ================= Служебный раздел ================= */
+const cntPending = () => S.bookings.filter(b => b.status === 'pending').length;
+const cntReviews = () => S.reviews.filter(r => r.status === 'pending').length;
+const cntFaults = () => S.faults.filter(f => f.status === 'new').length;
+const cntDirty = () => S.rooms.filter(r => r.status === 'dirty').length;
+const MENUS = {
+  admin: [['#', 'Бронирования'], ['requests', 'Заявки на бронирование', cntPending], ['calendar', 'Календарь занятости'], ['#', 'Гостиница'], ['fund', 'Номерной фонд'], ['tariffs', 'Тарифы и услуги'], ['moder', 'Отзывы', cntReviews], ['reports', 'Отчёты'], ['#', 'Персонал'], ['staff', 'Сотрудники'], ['schedule', 'График смен'], ['faults', 'Заявки о неисправностях', cntFaults], ['#', 'Профиль'], ['profile', 'Мои данные']],
+  maid: [['#', 'Работа'], ['cleaning', 'Уборка номеров', cntDirty], ['faults', 'Заявки о неисправностях'], ['schedule', 'График смен'], ['#', 'Профиль'], ['profile', 'Мои данные']],
+  tech: [['#', 'Работа'], ['faults', 'Заявки о неисправностях', cntFaults], ['schedule', 'График смен'], ['#', 'Профиль'], ['profile', 'Мои данные']]
+};
+const STAFF_R = { requests: ['admin'], calendar: ['admin'], fund: ['admin'], tariffs: ['admin'], moder: ['admin'], reports: ['admin'], staff: ['admin'], schedule: ['admin', 'maid', 'tech'], faults: ['admin', 'maid', 'tech'], cleaning: ['maid', 'admin'], profile: ['admin', 'maid', 'tech'] };
+const ACC_R = ['acc-bookings', 'acc-profile', 'acc-reviews', 'acc-notes'];
+
+function bellItems() {
+  const u = me(), items = [];
+  if (u.role === 'admin') {
+    S.bookings.filter(b => b.status === 'pending').forEach(b => items.push(`<button data-act="open-b" data-id="${b.id}"><span>Заявка #${b.id} — ${esc(b.name)}<br><span class="small">${S.types[b.type]?.name}, ${dm(b.in)}–${dm(b.out)}</span></span></button>`));
+    S.reviews.filter(r => r.status === 'pending').forEach(r => items.push(`<a href="#" data-go="moder"><span>Отзыв на модерации — ${esc(r.name)}</span></a>`));
+  }
+  if (u.role === 'admin' || u.role === 'tech') S.faults.filter(f => f.status === 'new').forEach(f => items.push(`<a href="#" data-go="faults"><span>Неисправность в № ${f.room}: ${esc(f.equip)}</span></a>`));
+  if (u.role === 'maid') S.rooms.filter(r => r.status === 'dirty').forEach(r => items.push(`<a href="#" data-go="cleaning"><span>Номер ${r.no} требует уборки</span></a>`));
+  return items;
+}
+function staffShell(inner) {
+  const u = me(), menu = MENUS[u.role] || MENUS.tech, notes = bellItems();
+  const side = menu.map(m => m[0] === '#' ? `<div class="grp">${m[1]}</div>` : `<a href="#" data-go="${m[0]}" class="${S.route === m[0] ? 'active' : ''}">${m[1]}${m[2] && m[2]() ? `<span class="cnt">${m[2]()}</span>` : ''}</a>`).join('');
+  return `<header class="st-header"><a href="#" class="logo" data-go="${staffHome()}">${LOGO}<span>Альпинист</span></a><span class="staff-tag">Служебный раздел</span>
+  <div class="st-right"><a href="#" class="st-link" data-go="home">На сайт ↗</a>
+  <div class="dd-wrap"><button class="bell" data-act="dd" data-dd="bell" aria-label="События">${BELL}${notes.length ? `<span class="bell-cnt">${notes.length}</span>` : ''}</button><div class="dropdown wide" id="dd-bell" hidden>${notes.length ? notes.join('') : '<div class="dd-empty">Новых событий нет</div>'}</div></div>
+  <div class="dd-wrap"><button class="user st-user" data-act="dd" data-dd="user"><span class="avatar acc">${ini(u)}</span><span class="u-txt">${esc(shortName(u))}<small>${ROLE[u.role]}</small></span></button><div class="dropdown" id="dd-user" hidden><a href="#" data-go="profile">Мои данные</a><a href="#" data-go="home">Перейти на сайт</a><div class="dd-sep"></div><button data-act="logout">Выйти</button></div></div></div></header>
+  <div class="layout"><nav class="side" aria-label="Меню служебного раздела">${side}</nav><div class="st-col"><main class="main">${inner}</main>
+  <div class="staff-footer"><span>© 2026 Гостиница «Альпинист» · служебный раздел · учебный прототип</span><span>Поддержка: it@alpinist.local · <a href="#" data-act="reset">Сбросить демо-данные</a></span></div></div></div>`;
+}
+
+/* ---------- Заявки на бронирование ---------- */
+P.requests = () => {
+  const occ = S.rooms.filter(r => occToday(r)).length;
+  const free = S.rooms.filter(r => !occToday(r) && r.status !== 'repair').length;
+  const arr = S.bookings.filter(b => b.in === TODAY && ACTIVE.includes(b.status)).length;
+  const q = S.rq;
+  return stCrumbs(['Бронирования'], 'Заявки на бронирование') + `<div class="head-row"><h2 class="h2s">Заявки на бронирование</h2><button class="btn" data-act="adm-new">+ Новое бронирование</button></div>
+  <div class="kpis"><div class="kpi"><div class="small">Ожидают подтверждения</div><div class="v" style="color:var(--c-warn)">${cntPending()}</div></div><div class="kpi"><div class="small">Заезды сегодня</div><div class="v">${arr}</div></div>
+  <div class="kpi"><div class="small">Загрузка номеров</div><div class="v">${Math.round(occ / S.rooms.length * 100)} %</div></div><div class="kpi"><div class="small">Свободно номеров</div><div class="v">${free} из ${S.rooms.length}</div></div></div>
+  <div class="card"><div class="filters"><input class="input sm q" type="search" name="q" placeholder="Поиск по гостю, телефону или номеру брони" value="${esc(q.q)}" data-live="rq" aria-label="Поиск">
+  <select class="input sm" name="status" data-live="rq" aria-label="Статус">${opts([['all', 'Статус: все'], ['pending', 'Ожидают'], ['confirmed', 'Подтверждены'], ['completed', 'Завершены'], ['rejected', 'Отклонены'], ['cancelled', 'Отменены']], q.status)}</select>
+  <select class="input sm" name="type" data-live="rq" aria-label="Тип номера">${opts([['all', 'Тип номера: все'], ...TK.map(k => [k, S.types[k].name])], q.type)}</select>
+  <label class="inline-f">Заезд с<input class="input sm" type="date" name="from" value="${q.from}" data-live="rq"></label></div><div id="rq-table">${rqTable()}</div></div>`;
+};
+function rqTable() {
+  const q = S.rq, qq = q.q.trim().toLowerCase();
+  const list = S.bookings.filter(b => (q.status === 'all' || bst(b) === q.status) && (q.type === 'all' || b.type === q.type) && (!q.from || b.in >= q.from) &&
+    (!qq || `#${b.id} ${b.id} ${b.name} ${b.phone} ${b.email} ${b.room}`.toLowerCase().includes(qq))).sort((a, b) => (a.status === 'pending' ? 0 : 1) - (b.status === 'pending' ? 0 : 1) || b.id - a.id);
+  const rows = list.map(b => {
+    const s = bst(b);
+    const acts = s === 'pending' ? `<button class="btn ok sm" data-act="confirm-b" data-id="${b.id}">Подтвердить</button> <button class="btn danger sm" data-act="reject-b" data-id="${b.id}">Отклонить</button>` : `<button class="btn ghost sm" data-act="open-b" data-id="${b.id}">Открыть</button>`;
+    return `<tr class="${s === 'pending' ? 'hl' : ''}"><td><a href="#" class="id-link" data-act="open-b" data-id="${b.id}">#${b.id}</a></td><td><div style="font-weight:500">${esc(b.name)}</div><div class="small">${esc(b.phone)}</div></td><td>${S.types[b.type]?.name}, ${b.room}</td><td class="tnum">${dm(b.in)}–${dm(b.out)}</td><td>${b.adults} / ${b.children}</td><td style="font-weight:600" class="tnum">${money(b.total)}</td><td>${badge(PAY, b.pay)}</td><td>${s === 'pending' ? '<span class="badge b-warn">Ожидает</span>' : badge(STATUS, s)}</td><td style="text-align:right">${acts}</td></tr>`;
+  }).join('');
+  return `<div class="tbl-wrap"><table><tr><th>№</th><th>Гость</th><th>Номер</th><th>Даты</th><th>Взр. / дети</th><th>Сумма</th><th>Оплата</th><th>Статус</th><th></th></tr>${rows || '<tr><td colspan="9" class="center muted" style="padding:32px">Ничего не найдено</td></tr>'}</table></div><div class="tbl-foot"><span>Показано ${list.length} из ${S.bookings.length}</span><span>Отсортировано: сначала ожидающие</span></div>`;
+}
+function bookingDetails(b, admin) {
+  const s = bst(b), c = calc(b);
+  const roomSel = admin && ACTIVE.includes(s) ? `<select class="input sm" style="width:auto" data-live="b-room" data-id="${b.id}" aria-label="Номер">${opts([...new Set([b.room, ...freeRooms(b.type, b.in, b.out, b.id).map(r => r.no)])].sort(), b.room)}</select>` : b.room;
+  return `<div class="row wrap gap8">${badge(STATUS, s)}${badge(PAY, b.pay)}</div><dl class="dl">
+  <dt>Гость</dt><dd>${esc(b.name)}</dd><dt>Телефон</dt><dd>${esc(b.phone)}</dd><dt>E‑mail</dt><dd>${esc(b.email || '—')}</dd>
+  <dt>Номер</dt><dd>${S.types[b.type]?.name}, ${roomSel}</dd><dt>Даты</dt><dd>${ru(b.in)} – ${ru(b.out)} (${c.n} ${plural(c.n, 'ночь', 'ночи', 'ночей')})</dd><dt>Гости</dt><dd>${guestsLabel(b)}</dd>
+  <dt>Услуги</dt><dd>${svcNames(b) || 'нет'}</dd>${b.wish ? `<dt>Пожелания</dt><dd>${esc(b.wish)}</dd>` : ''}<dt>Сумма</dt><dd><b>${money(b.total)}</b></dd><dt>Создано</dt><dd>${ru(b.created)}</dd>${b.reason ? `<dt>Причина</dt><dd>${esc(b.reason)}</dd>` : ''}</dl>`;
+}
+
+/* ---------- Календарь ---------- */
+P.calendar = () => {
+  const st = S.cal || TODAY, days = [...Array(14)].map((_, i) => addDays(st, i));
+  const we = d => [0, 6].includes(D(d).getDay());
+  const head = days.map(d => `<th class="${d === TODAY ? 'today' : ''} ${we(d) ? 'we' : ''}">${dm(d)}<small>${WD[D(d).getDay()]}</small></th>`).join('');
+  const rows = S.rooms.map(r => {
+    let cells = '', i = 0;
+    while (i < 14) {
+      const day = days[i], b = S.bookings.find(b => b.room === r.no && ACTIVE.includes(b.status) && b.in <= day && day < b.out);
+      if (b) { let span = 1; while (i + span < 14 && days[i + span] < b.out) span++; cells += `<td colspan="${span}"><button class="cal-chip ${b.status}" data-act="open-b" data-id="${b.id}" title="#${b.id} ${esc(b.name)}, ${ru(b.in)}–${ru(b.out)}">${esc(b.name.split(' ')[1] || b.name)} · #${b.id}</button></td>`; i += span; }
+      else { cells += `<td class="${day === TODAY ? 'today' : ''} ${we(day) ? 'we' : ''}"></td>`; i++; }
+    }
+    return `<tr><td class="sticky">${r.no}<div class="small" style="font-weight:400">${S.types[r.type]?.name}</div></td>${cells}</tr>`;
+  }).join('');
+  return stCrumbs(['Бронирования'], 'Календарь занятости') + `<div class="head-row"><h2 class="h2s">Календарь занятости</h2><div class="row gap8"><button class="btn ghost sm" data-act="cal" data-v="-7">← Неделя</button><button class="btn ghost sm" data-act="cal" data-v="0">Сегодня</button><button class="btn ghost sm" data-act="cal" data-v="7">Неделя →</button></div></div>
+  <p class="muted" style="margin-bottom:16px">${ru(days[0])} — ${ru(days[13])}. Нажмите на бронирование, чтобы открыть его.</p>
+  <div class="card tbl-wrap"><table class="cal"><tr><th class="sticky">Номер</th>${head}</tr>${rows}</table></div>
+  <div class="legend"><span class="cal-chip confirmed" style="width:auto">Подтверждено</span><span class="cal-chip pending" style="width:auto">Ожидает подтверждения</span><span>Выходные дни выделены фоном</span></div>`;
+};
+
+/* ---------- Номерной фонд ---------- */
+P.fund = () => {
+  const rows = S.rooms.slice().sort((a, b) => a.no.localeCompare(b.no, 'ru', { numeric: true })).map(r => {
+    const cur = occToday(r), nx = S.bookings.filter(b => b.room === r.no && ACTIVE.includes(b.status) && b.in > TODAY).sort((a, b) => a.in.localeCompare(b.in))[0];
+    return `<tr><td style="font-weight:600">${r.no}</td><td>${S.types[r.type]?.name || '—'}</td><td>${r.floor}</td><td><select class="input sm" style="width:auto" data-live="room-status" data-no="${r.no}" aria-label="Статус номера ${r.no}">${opts(Object.entries(RST).map(([k, v]) => [k, v[1]]), r.status)}</select></td>
+    <td>${cur ? `${esc(cur.name)} <span class="small">до ${dm(cur.out)}</span>` : '<span class="small">—</span>'}</td><td>${nx ? `${dm(nx.in)} · <a href="#" class="id-link" data-act="open-b" data-id="${nx.id}">#${nx.id}</a>` : '<span class="small">—</span>'}</td>
+    <td style="text-align:right"><button class="btn ghost sm" data-act="room-edit" data-no="${r.no}">Изменить</button> <button class="btn danger sm" data-act="room-del" data-no="${r.no}">Удалить</button></td></tr>`;
+  }).join('');
+  const cnt = k => S.rooms.filter(r => r.status === k).length;
+  return stCrumbs(['Гостиница'], 'Номерной фонд') + `<div class="head-row"><h2 class="h2s">Номерной фонд</h2><button class="btn" data-act="room-edit">+ Добавить номер</button></div>
+  <div class="row wrap gap8" style="margin-bottom:16px">${Object.keys(RST).map(k => `<span class="badge ${RST[k][0]}">${RST[k][1]} — ${cnt(k)}</span>`).join('')}</div>
+  <div class="card tbl-wrap"><table><tr><th>Номер</th><th>Тип</th><th>Этаж</th><th>Статус</th><th>Сейчас проживает</th><th>Ближайший заезд</th><th></th></tr>${rows}</table></div>`;
+};
+
+/* ---------- Тарифы и услуги ---------- */
+P.tariffs = () => stCrumbs(['Гостиница'], 'Тарифы и услуги') + `<div class="head-row"><h2 class="h2s">Тарифы и услуги</h2></div>
+  <form class="card" data-form="tariffs"><div class="filters jc-b"><h3>Тарифы на проживание</h3><button class="btn sm" type="submit">Сохранить тарифы</button></div><div class="tbl-wrap"><table><tr><th>Тип номера</th><th>Цена за ночь, ₽</th><th>Вместимость, чел.</th><th>Площадь, м²</th><th>Номеров</th></tr>
+  ${TK.map(k => { const t = S.types[k]; return `<tr><td><b>${t.name}</b></td><td><input class="input sm" style="width:130px" type="number" min="500" step="100" name="price_${k}" value="${t.price}"></td><td><input class="input sm" style="width:90px" type="number" min="1" max="8" name="cap_${k}" value="${t.cap}"></td><td><input class="input sm" style="width:90px" type="number" min="8" max="200" name="area_${k}" value="${t.area}"></td><td>${S.rooms.filter(r => r.type === k).length}</td></tr>`; }).join('')}</table></div></form>
+  <form class="card mt24" data-form="services"><div class="filters jc-b"><h3>Дополнительные услуги</h3><div class="row gap8"><button class="btn outline sm" type="button" data-act="svc-add">+ Добавить услугу</button><button class="btn sm" type="submit">Сохранить услуги</button></div></div><div class="tbl-wrap"><table><tr><th>Название</th><th>Описание</th><th>Цена, ₽</th><th>Расчёт</th><th></th></tr>
+  ${S.services.map(s => `<tr><td><input class="input sm" style="min-width:220px" name="name_${s.id}" value="${esc(s.name)}"></td><td class="wrap-c"><input class="input sm" style="min-width:260px" name="desc_${s.id}" value="${esc(s.desc)}"></td><td><input class="input sm" style="width:110px" type="number" min="0" step="50" name="price_${s.id}" value="${s.price}"></td><td><select class="input sm" style="width:auto" name="unit_${s.id}">${opts(Object.entries(UNIT), s.unit)}</select></td><td><button class="btn danger sm" type="button" data-act="svc-del" data-id="${s.id}">Удалить</button></td></tr>`).join('')}</table></div></form>
+  <p class="small mt12">Новые цены применяются к новым бронированиям. Уже оформленные бронирования сохраняют исходную стоимость.</p>`;
+
+/* ---------- Модерация отзывов ---------- */
+P.moder = () => {
+  const tab = S.modTab, list = S.reviews.filter(r => r.status === tab).sort((a, b) => b.date.localeCompare(a.date));
+  const c = k => S.reviews.filter(r => r.status === k).length;
+  return stCrumbs(['Гостиница'], 'Отзывы') + `<div class="head-row"><h2 class="h2s">Отзывы гостей</h2></div>
+  <div class="tabs">${[['pending', 'На модерации'], ['published', 'Опубликованные'], ['hidden', 'Скрытые']].map(([k, t]) => `<button class="${tab === k ? 'on' : ''}" data-act="mod-tab" data-v="${k}">${t} (${c(k)})</button>`).join('')}</div>
+  <div class="stack">${list.length ? list.map(r => `<div class="card mod-card"><div class="stack" style="gap:8px"><div class="row wrap gap8">${stars(r.rating)}<b>${esc(r.name)}</b><span class="small">${S.types[r.type]?.name || ''} · ${ru(r.date)}${r.bookingId ? ` · бронирование #${r.bookingId}` : ''}</span></div><p>${esc(r.text)}</p></div>
+  <div class="row wrap gap8 jc-e">${r.status !== 'published' ? `<button class="btn ok sm" data-act="rv" data-v="published" data-id="${r.id}">Опубликовать</button>` : ''}${r.status !== 'hidden' ? `<button class="btn ghost sm" data-act="rv" data-v="hidden" data-id="${r.id}">Скрыть</button>` : ''}<button class="btn danger sm" data-act="rv-del" data-id="${r.id}">Удалить</button></div></div>`).join('') : '<div class="empty">В этом разделе отзывов нет.</div>'}</div>`;
+};
+
+/* ---------- Отчёты ---------- */
+P.reports = () => {
+  const d0 = TODAY.slice(0, 8) + '01', last = addDays(iso(new Date(D(d0).getFullYear(), D(d0).getMonth() + 1, 1)), -1);
+  const rp = S.rep || { from: d0, to: last };
+  const end = addDays(rp.to, 1), days = Math.max(nights(rp.from, end), 1);
+  const conf = S.bookings.filter(b => b.status === 'confirmed');
+  const ov = b => Math.max(0, nights(b.in > rp.from ? b.in : rp.from, b.out < end ? b.out : end));
+  const byType = TK.map(k => {
+    const rooms = S.rooms.filter(r => r.type === k).length, cap = rooms * days;
+    const bs = conf.filter(b => b.type === k), occ = bs.reduce((a, b) => a + ov(b), 0);
+    const inP = bs.filter(b => b.in >= rp.from && b.in <= rp.to), rev = inP.reduce((a, b) => a + b.total, 0);
+    return { k, rooms, cap, occ, pct: cap ? Math.round(occ / cap * 100) : 0, rev, cnt: inP.length };
+  });
+  const totCap = byType.reduce((a, x) => a + x.cap, 0), totOcc = byType.reduce((a, x) => a + x.occ, 0), rev = byType.reduce((a, x) => a + x.rev, 0), cnt = byType.reduce((a, x) => a + x.cnt, 0);
+  const inPeriod = S.bookings.filter(b => b.in >= rp.from && b.in <= rp.to);
+  const lost = inPeriod.filter(b => ['cancelled', 'rejected'].includes(b.status)).length;
+  return stCrumbs(['Гостиница'], 'Отчёты') + `<div class="head-row"><h2 class="h2s">Отчёт о загрузке номеров</h2></div>
+  <form class="card filters" data-form="report" style="border-bottom:1px solid var(--c-border);margin-bottom:24px"><label class="inline-f">Период с<input class="input sm" type="date" name="from" value="${rp.from}"></label><label class="inline-f">по<input class="input sm" type="date" name="to" value="${rp.to}"></label><button class="btn sm" type="submit">Сформировать</button><span class="small">${days} ${plural(days, 'день', 'дня', 'дней')}</span></form>
+  <div class="kpis"><div class="kpi"><div class="small">Средняя загрузка</div><div class="v">${totCap ? Math.round(totOcc / totCap * 100) : 0} %</div></div><div class="kpi"><div class="small">Выручка (заезды в периоде)</div><div class="v">${money(rev)}</div></div><div class="kpi"><div class="small">Подтверждённых бронирований</div><div class="v">${cnt}</div></div><div class="kpi"><div class="small">Отмены и отказы</div><div class="v">${lost}</div></div></div>
+  <div class="card tbl-wrap"><table><tr><th>Тип номера</th><th>Номеров</th><th>Занято ночей</th><th>Доступно ночей</th><th style="width:30%">Загрузка</th><th>Выручка</th></tr>
+  ${byType.map(x => `<tr><td><b>${S.types[x.k].name}</b></td><td>${x.rooms}</td><td class="tnum">${x.occ}</td><td class="tnum">${x.cap}</td><td><div class="row"><div class="bar" style="flex:1"><span style="width:${Math.min(x.pct, 100)}%"></span></div><span class="tnum" style="width:44px;text-align:right">${x.pct} %</span></div></td><td class="tnum">${money(x.rev)}</td></tr>`).join('')}
+  <tr><td><b>Итого</b></td><td>${S.rooms.length}</td><td class="tnum"><b>${totOcc}</b></td><td class="tnum">${totCap}</td><td></td><td class="tnum"><b>${money(rev)}</b></td></tr></table></div>
+  <p class="small mt12">Учитываются подтверждённые бронирования. Загрузка = занятые ночи / (номера × дни периода).</p>`;
+};
+
+/* ---------- Сотрудники ---------- */
+P.staff = () => {
+  const list = S.users.filter(u => u.role !== 'guest');
+  return stCrumbs(['Персонал'], 'Сотрудники') + `<div class="head-row"><h2 class="h2s">Сотрудники</h2><button class="btn" data-act="staff-edit">+ Добавить сотрудника</button></div>
+  <div class="card tbl-wrap"><table><tr><th>ФИО</th><th>Должность</th><th>E‑mail (логин)</th><th>Телефон</th><th>Доступ</th><th></th></tr>
+  ${list.map(u => `<tr><td><div class="row"><span class="avatar ${u.role === 'admin' ? 'acc' : ''}">${ini(u)}</span><b>${esc(fullName(u))}</b></div></td><td>${ROLE[u.role]}</td><td>${esc(u.email)}</td><td>${esc(u.phone)}</td><td>${u.active ? '<span class="badge b-ok">Активен</span>' : '<span class="badge b-gray">Заблокирован</span>'}</td>
+  <td style="text-align:right"><button class="btn ghost sm" data-act="staff-edit" data-email="${esc(u.email)}">Изменить</button> ${u.email === S.uid ? '' : `<button class="btn ${u.active ? 'danger' : 'outline'} sm" data-act="staff-toggle" data-email="${esc(u.email)}">${u.active ? 'Заблокировать' : 'Разблокировать'}</button>`}</td></tr>`).join('')}</table></div>`;
+};
+
+/* ---------- График смен ---------- */
+function defShift(u, day) {
+  const staff = S.users.filter(x => x.role !== 'guest'), idx = staff.indexOf(u), wd = D(day).getDay(), k = ((nights('2026-10-05', day) % 4) + 4) % 4;
+  if (u.role === 'tech' || idx === 0) return wd >= 1 && wd <= 5 ? 'D' : 'O';
+  const cyc = u.role === 'admin' ? ['D', 'N', 'O', 'O'] : ['D', 'D', 'O', 'O'];
+  return cyc[(k + idx) % 4];
+}
+const getShift = (u, day) => S.shifts[u.email + '|' + day] ?? defShift(u, day);
+const SHL = { D: 'Д 08–20', N: 'Н 20–08', O: 'Выходной' };
+P.schedule = () => {
+  const u = me(), admin = u.role === 'admin', days = [...Array(7)].map((_, i) => addDays(S.week, i));
+  const staff = S.users.filter(x => x.role !== 'guest' && x.active);
+  const rows = staff.map(x => {
+    const hours = days.reduce((a, d) => a + (getShift(x, d) === 'O' ? 0 : 12), 0);
+    return `<tr class="${x.email === u.email ? 'hl' : ''}"><td><b>${esc(shortName(x))}</b><div class="small">${ROLE[x.role]}</div></td>${days.map(d => { const v = getShift(x, d); return `<td class="${d === TODAY ? 'today' : ''}">${admin ? `<select class="input shift-sel" data-live="shift" data-key="${esc(x.email)}|${d}" aria-label="Смена ${esc(shortName(x))} ${ru(d)}">${opts(Object.entries(SHL), v)}</select>` : `<span class="shift ${v}">${v === 'O' ? '—' : v === 'D' ? 'Д' : 'Н'}</span>`}</td>`; }).join('')}<td class="tnum">${hours} ч</td></tr>`;
+  }).join('');
+  return stCrumbs(['Персонал'], 'График смен') + `<div class="head-row"><h2 class="h2s">График смен</h2><div class="row gap8"><button class="btn ghost sm" data-act="week" data-v="-7">← Неделя</button><button class="btn ghost sm" data-act="week" data-v="0">Текущая</button><button class="btn ghost sm" data-act="week" data-v="7">Неделя →</button></div></div>
+  <p class="muted" style="margin-bottom:16px">Неделя ${ru(days[0])} — ${ru(days[6])}${admin ? '. Выберите смену в ячейке, изменения сохраняются сразу.' : '. График составляет администратор.'}</p>
+  <div class="card tbl-wrap"><table class="cal"><tr><th class="sticky">Сотрудник</th>${days.map(d => `<th class="${d === TODAY ? 'today' : ''}">${dm(d)}<small>${WD[D(d).getDay()]}</small></th>`).join('')}<th>Итого</th></tr>${rows}</table></div>
+  <div class="legend"><span><span class="shift D">Д</span> дневная 08:00–20:00</span><span><span class="shift N">Н</span> ночная 20:00–08:00</span><span><span class="shift O">—</span> выходной</span></div>`;
+};
+
+/* ---------- Неисправности ---------- */
+function faultForm() {
+  const sel = S.faultRoom || '';
+  return `<form class="card pad stack sticky-card" data-form="fault" id="fault-form"><div><h3>Сообщить о неисправности</h3><p class="small mt8">Заявка уйдёт администратору и техническому персоналу.</p></div>
+  <label class="field">Номер *<select class="input" name="room"><option value="">Выберите номер</option>${opts(S.rooms.map(r => r.no), sel)}</select></label>
+  <label class="field">Оборудование *<select class="input" name="equip">${opts(['Кондиционер', 'Сантехника', 'Освещение', 'Электрика', 'Мебель', 'ТВ / Wi‑Fi', 'Другое'])}</select></label>
+  <label class="field">Описание *<textarea class="input" name="desc" rows="3" placeholder="Что случилось?"></textarea></label>
+  <div class="field">Срочность<div class="row gap8 mt8">${['Низкая', 'Средняя', 'Высокая'].map((x, i) => `<label class="chip-r"><input type="radio" name="urg" value="${x}" ${i === 1 ? 'checked' : ''}><span>${x}</span></label>`).join('')}</div></div>
+  <div class="field">Фото (необязательно)<label class="file-in"><input type="file" name="photo" accept="image/*" data-file><span class="btn ghost sm">Выбрать фото</span><span class="small f-name">Файл не выбран</span></label></div>
+  <button class="btn" type="submit">Отправить заявку</button></form>`;
+}
+P.faults = () => {
+  const u = me(), canEdit = ['admin', 'tech'].includes(u.role), tab = S.fTab;
+  const list = S.faults.filter(f => tab === 'all' || f.status === tab).sort((a, b) => b.id - a.id);
+  const c = k => S.faults.filter(f => k === 'all' || f.status === k).length;
+  return stCrumbs([], 'Заявки о неисправностях') + `<div class="two-pane"><div><div class="head-row"><h2 class="h2s">Заявки о неисправностях</h2></div>
+  <div class="tabs">${[['all', 'Все'], ['new', 'Новые'], ['work', 'В работе'], ['done', 'Выполненные']].map(([k, t]) => `<button class="${tab === k ? 'on' : ''}" data-act="f-tab" data-v="${k}">${t} (${c(k)})</button>`).join('')}</div>
+  <div class="card tbl-wrap"><table><tr><th>№</th><th>Дата</th><th>Номер</th><th>Оборудование</th><th>Описание</th><th>Срочность</th><th>Автор</th><th>Статус</th></tr>
+  ${list.map(f => `<tr><td>${f.id}</td><td class="tnum">${dm(f.date)} ${f.time}</td><td><b>${f.room}</b></td><td>${esc(f.equip)}</td><td class="wrap-c">${esc(f.desc)}${f.photo ? `<div class="small">Фото: ${esc(f.photo)}</div>` : ''}</td><td>${f.urg === 'Высокая' ? '<span class="badge b-err">Высокая</span>' : f.urg === 'Средняя' ? '<span class="badge b-warn">Средняя</span>' : '<span class="badge b-gray">Низкая</span>'}</td><td>${esc(f.author)}</td>
+  <td>${canEdit ? `<select class="input sm" style="width:auto" data-live="fault-st" data-id="${f.id}" aria-label="Статус заявки ${f.id}">${opts(Object.entries(FST).map(([k, v]) => [k, v[1]]), f.status)}</select>` : badge(FST, f.status)}</td></tr>`).join('') || '<tr><td colspan="8" class="center muted" style="padding:32px">Заявок нет</td></tr>'}</table></div></div>
+  ${faultForm()}</div>`;
+};
+
+/* ---------- Уборка номеров ---------- */
+P.cleaning = () => {
+  const u = me(), f = S.hk, sh = getShift(u, TODAY);
+  const counts = k => S.rooms.filter(r => r.status === k).length;
+  const chips = [['all', 'Все', 'b-gray'], ['dirty', 'Требуют уборки', 'b-err'], ['work', 'Убираются', 'b-warn'], ['clean', 'Готовы', 'b-ok'], ['occ', 'Заняты', 'b-info']];
+  let tiles = '';
+  for (const fl of [...new Set(S.rooms.map(r => r.floor))].sort()) {
+    const rs = S.rooms.filter(r => r.floor === fl && (f === 'all' || r.status === f)).sort((a, b) => a.no.localeCompare(b.no, 'ru', { numeric: true }));
+    if (!rs.length) continue;
+    tiles += `<h4 style="margin:20px 0 12px">${fl} этаж</h4><div class="tiles">${rs.map(r => {
+      const b = r.status === 'dirty' ? `<button class="btn sm w100" data-act="clean-start" data-no="${r.no}">Начать уборку</button>` : r.status === 'work' ? `<button class="btn ok sm w100" data-act="clean-done" data-no="${r.no}">Готово</button>` : `<button class="btn ghost sm w100" data-act="room-modal" data-no="${r.no}">Подробнее</button>`;
+      return `<div class="card tile ${r.status === 'dirty' ? 'dirty' : ''}"><div class="row jc-b"><button class="no" data-act="room-modal" data-no="${r.no}" title="Подробнее">${r.no}</button><span class="small">${S.types[r.type]?.name}</span></div><div>${badge(RST, r.status)}</div>${r.status === 'work' && r.by ? `<div class="small">Убирает: ${esc(r.by)}</div>` : r.status === 'clean' && r.cleaned ? `<div class="small">Убрано ${esc(r.cleaned)}</div>` : ''}${b}</div>`;
+    }).join('')}</div>`;
+  }
+  return stCrumbs([], 'Уборка номеров') + `<div class="two-pane"><div><h2 class="h2s">Уборка номеров</h2><div class="muted mt8">Смена: ${ru(TODAY)}, ${sh === 'O' ? 'по графику выходной' : SHL[sh].replace('Д ', 'дневная ').replace('Н ', 'ночная ')}</div>
+  <div class="row wrap gap8 mt16">${chips.map(([k, t, cl]) => `<button class="fchip ${f === k ? 'on' : ''}" data-act="hk" data-v="${k}">${t}${k === 'all' ? '' : ` — ${counts(k)}`}</button>`).join('')}</div>
+  ${tiles || '<div class="empty mt24">Номеров с таким статусом нет.</div>'}</div>${faultForm()}</div>`;
+};
+
+/* ---------- Профиль сотрудника ---------- */
+P.profile = () => {
+  const u = me();
+  return stCrumbs([], 'Мои данные') + `<h2 class="h2s" style="margin-bottom:20px">Мои данные</h2><form class="card pad-l stack" data-form="profile" style="max-width:720px"><div class="grid2"><label class="field">Фамилия *<input class="input" name="last" value="${esc(u.last)}"></label><label class="field">Имя *<input class="input" name="first" value="${esc(u.first)}"></label>
+  <label class="field">Телефон *<input class="input" type="tel" name="phone" value="${esc(u.phone)}"></label><label class="field">E‑mail (логин)<input class="input" name="email" value="${esc(u.email)}" readonly></label><label class="field">Должность<input class="input" value="${ROLE[u.role]}" readonly></label></div>
+  <h4 class="mt8">Смена пароля</h4><div class="grid2"><label class="field">Новый пароль<input class="input" type="password" name="pass" autocomplete="new-password"></label><label class="field">Повторите пароль<input class="input" type="password" name="pass2" autocomplete="new-password"></label></div>
+  <div class="row jc-e"><button class="btn" type="submit">Сохранить</button></div></form>`;
+};
+
+/* ================= Рендер и навигация ================= */
+const app = $('#app');
+function render() {
+  const r = S.route, page = P[r] || P.home, staff = !!STAFF_R[r];
+  document.body.classList.toggle('staff', staff);
+  document.body.classList.remove('nav-open');
+  app.innerHTML = staff ? staffShell(page()) : pubHeader() + `<main>${page()}</main>` + footer();
+  const t = titleOf(r, S.params);
+  document.title = (t && r !== 'home' ? t + ' — ' : '') + 'Гостиница «Альпинист»';
+  const h = '#' + pathOf(r, S.params);
+  if (location.hash !== h) { try { history[PUSH ? 'pushState' : 'replaceState'](null, '', h); } catch (e) { location.hash = h; } }
+  PUSH = false;
+}
+let PUSH = false;
+const allowed = (r, u) => ACC_R.includes(r) ? !!u && u.role === 'guest' : STAFF_R[r] ? !!u && STAFF_R[r].includes(u.role) : true;
+function go(r, p = {}) {
+  const u = me();
+  if (ACC_R.includes(r) && !allowed(r, u)) {
+    if (u) { toast('Личный кабинет доступен гостям. Сотрудники работают в служебном разделе.', 'info'); r = staffHome(); p = {}; }
+    else { S.next = { r, p }; r = 'login'; p = {}; S.loginTab = 'login'; }
+  } else if (STAFF_R[r] && !allowed(r, u)) {
+    if (u && u.role !== 'guest') { toast('Нет доступа к этому разделу', 'err'); r = staffHome(); p = {}; }
+    else { if (!u) S.next = { r, p }; else toast('Раздел доступен только сотрудникам', 'info'); r = u ? 'home' : 'login'; p = u ? {} : { staff: 1 }; }
+  }
+  if (r === 'login' && u && !p.force) { r = u.role === 'guest' ? 'acc-bookings' : staffHome(); p = {}; }
+  if (r === 'booking') prepDraft(p);
+  S.route = r; S.params = p; closeModal(); save(); PUSH = true; render(); window.scrollTo(0, 0);
+  if (p.sec) setTimeout(() => { const el = document.getElementById(p.sec); if (el) el.scrollIntoView({ behavior: 'smooth' }); }, 60);
+}
+function commit() { save(); render(); }
+function loginAs(u) {
+  S.uid = u.email; S.accTab = 'cur'; S.draft = S.draft && S.draft.step === 2 ? S.draft : (S.draft && S.draft.step === 1 ? S.draft : null);
+  toast(`Добро пожаловать, ${u.first}!`);
+  const n = S.next; S.next = null;
+  if (n && allowed(n.r, u)) go(n.r, n.p); else go(u.role === 'guest' ? 'acc-bookings' : staffHome());
+}
+
+/* ---------- Модальное окно и уведомления ---------- */
+function modal(title, body, opt = {}) {
+  $('#modal-root').innerHTML = `<div class="overlay" data-act="close-ov"><div class="modal ${opt.wide ? 'wide' : ''}" role="dialog" aria-modal="true" aria-label="${esc(title)}"><div class="m-head"><h3>${title}</h3><button class="x" data-act="close" aria-label="Закрыть">×</button></div><div class="m-body">${body}</div></div></div>`;
+  const f = $('#modal-root .m-body input:not([type=hidden]):not([type=radio]), #modal-root .m-body textarea, #modal-root .m-body select');
+  if (f && !opt.noFocus) f.focus(); else { const x = $('#modal-root .x'); x && x.focus(); }
+}
+function closeModal() { $('#modal-root').innerHTML = ''; }
+function toast(msg, kind = 'ok') {
+  const t = document.createElement('div'); t.className = 'toast ' + kind; t.textContent = msg; $('#toasts').appendChild(t);
+  setTimeout(() => t.classList.add('out'), 3200); setTimeout(() => t.remove(), 3600);
+}
+function invalid(form, names) { names.forEach(n => { const el = form.querySelector(`[name="${n}"]`); if (el) el.classList.add('invalid'); }); const first = form.querySelector('.invalid'); first && first.focus(); }
+
+/* ================= Действия ================= */
+const ACT = {};
+ACT.burger = () => document.body.classList.toggle('nav-open');
+ACT.dd = (ds) => { const el = $('#dd-' + ds.dd); const open = el && el.hidden; $$('.dropdown').forEach(d => d.hidden = true); if (el && open) el.hidden = false; };
+ACT.close = () => closeModal();
+ACT['close-ov'] = (ds, el, e) => { if (e.target === el) closeModal(); };
+ACT.logout = () => { S.uid = null; S.draft = null; S.next = null; toast('Вы вышли из учётной записи', 'info'); go('home'); };
+ACT.reset = () => { modal('Сбросить демо-данные?', `<p>Все бронирования, отзывы, заявки и изменения, сделанные в прототипе, вернутся к исходным. Вы выйдете из учётной записи.</p><div class="m-foot"><button class="btn ghost" data-act="close">Отмена</button><button class="btn danger" data-act="reset-yes">Сбросить</button></div>`, { noFocus: true }); };
+ACT['reset-yes'] = () => { try { localStorage.removeItem(KEY); } catch (e) { } S = seed(); closeModal(); toast('Демо-данные восстановлены', 'info'); go('home'); };
+ACT['staff-login'] = () => { const u = me(); if (u && u.role !== 'guest') go(staffHome()); else go('login', { staff: 1, force: 1 }); };
+ACT['login-tab'] = ds => { S.loginTab = ds.v; render(); };
+ACT.demo = ds => { const u = findUser(ds.email); if (u) loginAs(u); };
+ACT['filter-reset'] = () => { S.filter = { types: [...TK], min: '', max: '', sort: 'price-asc' }; commit(); };
+ACT['rev-type'] = ds => { S.revType = ds.v; commit(); };
+ACT['acc-tab'] = ds => { S.accTab = ds.v; commit(); };
+ACT['mod-tab'] = ds => { S.modTab = ds.v; commit(); };
+ACT['f-tab'] = ds => { S.fTab = ds.v; commit(); };
+ACT.hk = ds => { S.hk = ds.v; commit(); };
+ACT.cal = ds => { S.cal = +ds.v === 0 ? TODAY : addDays(S.cal || TODAY, +ds.v); commit(); };
+ACT.week = ds => { S.week = +ds.v === 0 ? mondayOf(TODAY) : addDays(S.week, +ds.v); commit(); };
+ACT['notes-read'] = () => { const u = me(); S.notes.forEach(n => { if (n.email === u.email) n.read = true; }); commit(); };
+
+ACT['room-info'] = ds => {
+  const k = ds.type, t = S.types[k], s = S.search, free = freeRooms(k, s.in, s.out).length;
+  modal(t.name, `<div style="border-radius:10px;overflow:hidden">${roomSvg(k, 220)}</div><p>${esc(t.desc)}</p><div class="chips">${t.feats.map(x => `<span class="chip">${esc(x)}</span>`).join('')}</div>
+  <dl class="dl"><dt>Площадь</dt><dd>${t.area} м²</dd><dt>Вместимость</dt><dd>до ${t.cap} ${plural(t.cap, 'гостя', 'гостей', 'гостей')}</dd><dt>Цена</dt><dd><b>${money(t.price)}</b> за ночь</dd><dt>${ru(s.in)}–${ru(s.out)}</dt><dd>${free ? `свободно ${free} ${plural(free, 'номер', 'номера', 'номеров')}` : 'нет свободных номеров'}</dd></dl>
+  <div class="m-foot"><button class="btn ghost" data-act="close">Закрыть</button><button class="btn" data-act="book" data-type="${k}">Забронировать</button></div>`, { noFocus: true });
+};
+function startBooking(p) {
+  S.draft = newDraft(p);
+  if (isGuest() && p.type && freeRooms(p.type, S.draft.in, S.draft.out).length && (+S.draft.adults + +S.draft.children) <= S.types[p.type].cap) S.draft.step = 2;
+  go('booking', {});
+}
+ACT.book = ds => startBooking({ type: ds.type });
+ACT['svc-book'] = ds => { const n = S.services.find(s => s.id === ds.id); startBooking({ svc: ds.id }); toast(`Услуга «${n ? n.name : ''}» добавлена к бронированию`, 'info'); };
+ACT['new-booking'] = () => { S.draft = null; go('booking', { new: 1 }); };
+ACT['to-step'] = ds => { S.draft.step = +ds.v; commit(); window.scrollTo(0, 0); };
+ACT.next1 = () => {
+  const d = S.draft;
+  if (!d.in || !d.out || d.out <= d.in) return toast('Дата отъезда должна быть позже даты заезда', 'err');
+  if (d.in < TODAY) return toast('Дата заезда не может быть в прошлом', 'err');
+  if (!d.type) return toast('Выберите тип номера', 'err');
+  if ((+d.adults) + (+d.children) > S.types[d.type].cap) return toast(`${S.types[d.type].name} вмещает до ${S.types[d.type].cap} гостей`, 'err');
+  if (!freeRooms(d.type, d.in, d.out).length) return toast('На эти даты нет свободных номеров выбранного типа', 'err');
+  const u = me();
+  if (u && u.role !== 'guest') return toast('Бронирование оформляет гость. Для брони от имени гостя используйте «Новое бронирование» в служебном разделе.', 'info');
+  d.step = 2;
+  if (!u) { S.next = { r: 'booking', p: {} }; S.loginTab = 'login'; toast('Войдите или зарегистрируйтесь, чтобы продолжить бронирование', 'info'); go('login'); return; }
+  commit(); window.scrollTo(0, 0);
+};
+ACT.create = () => {
+  const d = S.draft, g = d.guest, form = $('#bk-guest'), bad = [];
+  if (!g.last.trim()) bad.push('last'); if (!g.first.trim()) bad.push('first'); if (!phoneOk(g.phone)) bad.push('phone'); if (!emailOk(g.email)) bad.push('email');
+  if (bad.length) { invalid(form, bad); return toast('Проверьте выделенные поля: нужны ФИО, телефон из 10+ цифр и корректный e‑mail', 'err'); }
+  const free = freeRooms(d.type, d.in, d.out);
+  if (!free.length) return toast('Пока вы заполняли форму, свободные номера закончились. Выберите другие даты.', 'err');
+  const id = Math.max(...S.bookings.map(b => b.id), 89) + 1;
+  const b = { id, email: me().email, name: `${g.first.trim()} ${g.last.trim()}`, phone: g.phone.trim(), type: d.type, room: free[0].no, in: d.in, out: d.out, adults: +d.adults, children: +d.children, services: [...d.services], pay: 'unpaid', status: 'pending', created: TODAY, wish: (d.wish || '').trim(), reason: '', method: '' };
+  b.total = calc(b).total; S.bookings.push(b);
+  notify(b.email, `Бронирование #${id} создано и ожидает подтверждения администратором.`);
+  d.bookingId = id; d.step = 3; commit(); window.scrollTo(0, 0); toast(`Бронирование #${id} создано`);
+};
+ACT.pay = (ds, el) => {
+  const b = getB(S.draft.bookingId); if (!b) return;
+  el.disabled = true; el.textContent = 'Переход в ЮKassa…';
+  setTimeout(() => { b.pay = 'paid'; b.method = S.draft.method || 'card'; notify(b.email, `Оплата по бронированию #${b.id} получена: ${money(b.total)}.`); S.draft.step = 4; commit(); window.scrollTo(0, 0); toast('Оплата прошла успешно'); }, 900);
+};
+ACT['pay-later'] = () => { S.draft.step = 4; commit(); window.scrollTo(0, 0); toast('Бронирование сохранено, оплатить можно в личном кабинете', 'info'); };
+
+ACT['b-info'] = ds => { const b = getB(ds.id); modal(`Бронирование #${b.id}`, bookingDetails(b, false) + `<div class="m-foot"><button class="btn ghost" data-act="close">Закрыть</button></div>`, { noFocus: true }); };
+ACT['cancel-b'] = ds => {
+  const b = getB(ds.id);
+  modal(`Отменить бронирование #${b.id}?`, `<p>${S.types[b.type]?.name}, ${ru(b.in)} – ${ru(b.out)}.</p>${b.pay === 'paid' ? `<div class="note">Оплата ${money(b.total)} будет возвращена на карту в течение 3–5 рабочих дней.</div>` : ''}
+  <div class="m-foot"><button class="btn ghost" data-act="close">Не отменять</button><button class="btn danger" data-act="cancel-yes" data-id="${b.id}">Отменить бронирование</button></div>`, { noFocus: true });
+};
+ACT['cancel-yes'] = ds => {
+  const b = getB(ds.id); b.status = 'cancelled'; b.reason = b.reason || 'Отменено гостем'; if (b.pay === 'paid') b.pay = 'refunded';
+  notify(b.email, `Бронирование #${b.id} отменено.${b.pay === 'refunded' ? ' Возврат оплаты оформлен.' : ''}`);
+  closeModal(); commit(); toast(`Бронирование #${b.id} отменено`, 'info');
+};
+ACT['review-new'] = ds => {
+  if (!isGuest()) { if (me()) return toast('Отзывы оставляют гости', 'info'); S.next = { r: S.route, p: S.params }; toast('Войдите, чтобы оставить отзыв', 'info'); go('login'); return; }
+  const b = ds.id ? getB(ds.id) : null;
+  modal('Оставить отзыв', `<form class="stack" data-form="review"><input type="hidden" name="bookingId" value="${b ? b.id : ''}">
+  ${b ? `<p class="muted">${S.types[b.type]?.name}, номер ${b.room} · ${ru(b.in)} – ${ru(b.out)}</p>` : `<label class="field">Тип номера<select class="input" name="type">${opts(TK.map(k => [k, S.types[k].name]), 'cmf')}</select></label>`}
+  <div class="field">Оценка<div class="stars-in">${[5, 4, 3, 2, 1].map(n => `<input type="radio" id="st${n}" name="rating" value="${n}" ${n === 5 ? 'checked' : ''}><label for="st${n}" title="${n}">★</label>`).join('')}</div></div>
+  <label class="field">Отзыв *<textarea class="input" name="text" rows="4" placeholder="Что понравилось, что можно улучшить"></textarea></label>
+  <p class="small">Отзыв появится на сайте после проверки администратором.</p><div class="m-foot"><button type="button" class="btn ghost" data-act="close">Отмена</button><button class="btn" type="submit">Отправить</button></div></form>`);
+};
+
+// --- служебный раздел
+ACT['confirm-b'] = ds => { const b = getB(ds.id); b.status = 'confirmed'; notify(b.email, `Бронирование #${b.id} подтверждено. Ждём вас ${ru(b.in)}!`); closeModal(); commit(); toast(`Бронирование #${b.id} подтверждено, гостю отправлено уведомление`); };
+ACT['reject-b'] = ds => reasonModal(ds.id, 'reject');
+ACT['adm-cancel'] = ds => reasonModal(ds.id, 'cancel');
+function reasonModal(id, mode) {
+  const b = getB(id), rej = mode === 'reject';
+  modal(`${rej ? 'Отклонить' : 'Отменить'} бронирование #${b.id}`, `<form class="stack" data-form="reason"><input type="hidden" name="id" value="${b.id}"><input type="hidden" name="mode" value="${mode}"><p class="muted">${esc(b.name)} · ${S.types[b.type]?.name}, ${ru(b.in)} – ${ru(b.out)}</p>
+  <label class="field">Причина * (её увидит гость)<textarea class="input" name="reason" rows="3" placeholder="Например: номер на ремонте в эти даты"></textarea></label>${b.pay === 'paid' ? `<div class="note">Оплата ${money(b.total)} будет возвращена гостю автоматически.</div>` : ''}
+  <div class="m-foot"><button type="button" class="btn ghost" data-act="close">Отмена</button><button class="btn danger" type="submit">${rej ? 'Отклонить' : 'Отменить бронирование'}</button></div></form>`);
+}
+ACT['open-b'] = ds => {
+  $$('.dropdown').forEach(d => d.hidden = true);
+  const b = getB(ds.id), s = bst(b), acts = [];
+  if (s === 'pending') acts.push(`<button class="btn danger" data-act="reject-b" data-id="${b.id}">Отклонить</button><button class="btn ok" data-act="confirm-b" data-id="${b.id}">Подтвердить</button>`);
+  if (s === 'confirmed') acts.push(`<button class="btn danger" data-act="adm-cancel" data-id="${b.id}">Отменить бронирование</button>`);
+  if (ACTIVE.includes(s) && b.pay === 'unpaid') acts.push(`<button class="btn outline" data-act="mark-paid" data-id="${b.id}">Отметить оплату на ресепшене</button>`);
+  modal(`Бронирование #${b.id}`, bookingDetails(b, true) + `<div class="m-foot"><button class="btn ghost" data-act="close">Закрыть</button>${acts.join('')}</div>`, { wide: true, noFocus: true });
+};
+ACT['mark-paid'] = ds => { const b = getB(ds.id); b.pay = 'paid'; b.method = 'reception'; notify(b.email, `Оплата по бронированию #${b.id} принята на ресепшене.`); closeModal(); commit(); toast(`Оплата по #${b.id} отмечена`); };
+ACT['adm-new'] = () => {
+  const s = S.search;
+  modal('Новое бронирование', `<form class="stack" data-form="adm-new"><div class="grid2"><label class="field">Фамилия *<input class="input" name="last"></label><label class="field">Имя *<input class="input" name="first"></label>
+  <label class="field">Телефон *<input class="input" type="tel" name="phone" placeholder="+7"></label><label class="field">E‑mail<input class="input" type="email" name="email" placeholder="для уведомлений"></label>
+  <label class="field">Тип номера<select class="input" name="type">${opts(TK.map(k => [k, `${S.types[k].name} — ${money(S.types[k].price)}`]), 'std')}</select></label><label class="field">Оплата<select class="input" name="pay">${opts([['unpaid', 'Не оплачено'], ['paid', 'Оплачено на ресепшене']], 'unpaid')}</select></label>
+  <label class="field">Заезд<input class="input" type="date" name="in" value="${s.in}" min="${TODAY}"></label><label class="field">Отъезд<input class="input" type="date" name="out" value="${s.out}" min="${addDays(TODAY, 1)}"></label>
+  <label class="field">Взрослые<select class="input" name="adults">${opts([1, 2, 3, 4], 2)}</select></label><label class="field">Дети<select class="input" name="children">${opts([0, 1, 2, 3], 0)}</select></label></div>
+  <div class="field">Услуги<div class="row wrap" style="gap:10px 18px;margin-top:4px">${S.services.map(x => `<label class="check"><input type="checkbox" name="svc" value="${x.id}">${esc(x.name)}</label>`).join('')}</div></div>
+  <p class="small">Бронирование, созданное администратором, сразу получает статус «Подтверждено».</p><div class="m-foot"><button type="button" class="btn ghost" data-act="close">Отмена</button><button class="btn" type="submit">Создать</button></div></form>`, { wide: true });
+};
+ACT['room-edit'] = ds => {
+  const r = ds.no ? S.rooms.find(x => x.no === ds.no) : null;
+  modal(r ? `Номер ${r.no}` : 'Новый номер', `<form class="stack" data-form="room"><input type="hidden" name="old" value="${r ? r.no : ''}"><div class="grid2"><label class="field">Номер *<input class="input" name="no" value="${r ? r.no : ''}" placeholder="например, 208"></label><label class="field">Этаж<select class="input" name="floor">${opts([1, 2, 3, 4], r ? r.floor : 2)}</select></label>
+  <label class="field">Тип<select class="input" name="type">${opts(TK.map(k => [k, S.types[k].name]), r ? r.type : 'std')}</select></label><label class="field">Статус<select class="input" name="status">${opts(Object.entries(RST).map(([k, v]) => [k, v[1]]), r ? r.status : 'clean')}</select></label></div>
+  <div class="m-foot"><button type="button" class="btn ghost" data-act="close">Отмена</button><button class="btn" type="submit">${r ? 'Сохранить' : 'Добавить'}</button></div></form>`);
+};
+ACT['room-del'] = ds => {
+  const busy = S.bookings.some(b => b.room === ds.no && ACTIVE.includes(b.status) && b.out > TODAY);
+  if (busy) return toast(`Номер ${ds.no} нельзя удалить: на него есть действующие бронирования`, 'err');
+  modal(`Удалить номер ${ds.no}?`, `<p>Номер будет удалён из номерного фонда и перестанет участвовать в поиске.</p><div class="m-foot"><button class="btn ghost" data-act="close">Отмена</button><button class="btn danger" data-act="room-del-yes" data-no="${ds.no}">Удалить</button></div>`, { noFocus: true });
+};
+ACT['room-del-yes'] = ds => { S.rooms = S.rooms.filter(r => r.no !== ds.no); closeModal(); commit(); toast(`Номер ${ds.no} удалён`, 'info'); };
+ACT['svc-add'] = () => { collectServices(); S.services.push({ id: 's' + Date.now(), name: 'Новая услуга', price: 1000, unit: 'once', desc: 'Описание услуги' }); commit(); toast('Добавлена строка новой услуги — заполните и сохраните', 'info'); };
+ACT['svc-del'] = ds => { collectServices(); const s = S.services.find(x => x.id === ds.id); S.services = S.services.filter(x => x.id !== ds.id); commit(); toast(`Услуга «${s ? s.name : ''}» удалена`, 'info'); };
+function collectServices() { const f = $('form[data-form="services"]'); if (!f) return; const fd = new FormData(f); S.services.forEach(s => { if (fd.has('name_' + s.id)) { s.name = fd.get('name_' + s.id).trim() || s.name; s.desc = fd.get('desc_' + s.id).trim(); s.price = Math.max(0, +fd.get('price_' + s.id) || 0); s.unit = fd.get('unit_' + s.id); } }); }
+ACT.rv = ds => { const r = S.reviews.find(x => x.id === +ds.id); r.status = ds.v; commit(); toast(ds.v === 'published' ? 'Отзыв опубликован' : 'Отзыв скрыт', ds.v === 'published' ? 'ok' : 'info'); };
+ACT['rv-del'] = ds => { S.reviews = S.reviews.filter(x => x.id !== +ds.id); commit(); toast('Отзыв удалён', 'info'); };
+ACT['staff-edit'] = ds => {
+  const u = ds.email ? findUser(ds.email) : null;
+  modal(u ? 'Изменить сотрудника' : 'Новый сотрудник', `<form class="stack" data-form="staff"><input type="hidden" name="old" value="${u ? esc(u.email) : ''}"><div class="grid2"><label class="field">Фамилия *<input class="input" name="last" value="${u ? esc(u.last) : ''}"></label><label class="field">Имя *<input class="input" name="first" value="${u ? esc(u.first) : ''}"></label>
+  <label class="field">Должность<select class="input" name="role" ${u && u.email === S.uid ? 'disabled' : ''}>${opts([['admin', 'Администратор'], ['maid', 'Горничная'], ['tech', 'Техник']], u ? u.role : 'maid')}</select></label><label class="field">Телефон *<input class="input" type="tel" name="phone" value="${u ? esc(u.phone) : ''}"></label></div>
+  <label class="field">E‑mail (логин) *<input class="input" type="email" name="email" value="${u ? esc(u.email) : ''}"></label>${u ? '' : '<p class="small">Сотрудник сможет войти с этим e‑mail. Пароль для первого входа выдаётся лично.</p>'}
+  <div class="m-foot"><button type="button" class="btn ghost" data-act="close">Отмена</button><button class="btn" type="submit">${u ? 'Сохранить' : 'Добавить'}</button></div></form>`);
+};
+ACT['staff-toggle'] = ds => { const u = findUser(ds.email); u.active = !u.active; commit(); toast(`${fullName(u)}: ${u.active ? 'доступ восстановлен' : 'доступ заблокирован'}`, 'info'); };
+ACT['clean-start'] = ds => { const r = S.rooms.find(x => x.no === ds.no); r.status = 'work'; r.by = shortName(me()); commit(); toast(`Номер ${r.no}: уборка начата`, 'info'); };
+ACT['clean-done'] = ds => { const r = S.rooms.find(x => x.no === ds.no); r.status = 'clean'; r.cleaned = `${dm(TODAY)} ${nowTime()}`; r.by = ''; commit(); toast(`Номер ${r.no} готов к заселению`); };
+ACT['room-modal'] = ds => {
+  const r = S.rooms.find(x => x.no === ds.no), cur = occToday(r), nx = S.bookings.filter(b => b.room === r.no && ACTIVE.includes(b.status) && b.in > TODAY).sort((a, b) => a.in.localeCompare(b.in))[0];
+  modal(`Номер ${r.no}`, `<div class="row wrap gap8">${badge(RST, r.status)}</div><dl class="dl"><dt>Тип</dt><dd>${S.types[r.type]?.name}, ${r.floor} этаж</dd><dt>Сейчас</dt><dd>${cur ? `${esc(cur.name)}, выезд ${ru(cur.out)}` : 'гостей нет'}</dd><dt>Ближайший заезд</dt><dd>${nx ? `${ru(nx.in)}, ${guestsLabel(nx)}` : 'не запланирован'}</dd><dt>Последняя уборка</dt><dd>${r.cleaned || '—'}</dd></dl>
+  <label class="field">Изменить статус<select class="input" data-live="room-status" data-no="${r.no}">${opts(Object.entries(RST).map(([k, v]) => [k, v[1]]), r.status)}</select></label>
+  <div class="m-foot"><button class="btn ghost" data-act="close">Закрыть</button><button class="btn outline" data-act="fault-for" data-no="${r.no}">Сообщить о неисправности</button></div>`, { noFocus: true });
+};
+ACT['fault-for'] = ds => { S.faultRoom = ds.no; closeModal(); commit(); const f = $('#fault-form'); if (f) { f.scrollIntoView({ behavior: 'smooth', block: 'start' }); const t = f.querySelector('textarea'); t && t.focus({ preventScroll: true }); } };
+
+/* ================= Формы ================= */
+const FORMS = {};
+FORMS.search = (fd, f) => {
+  const i = fd.get('in'), o = fd.get('out');
+  if (!i || !o || o <= i) { invalid(f, ['out']); return toast('Дата отъезда должна быть позже даты заезда', 'err'); }
+  if (i < TODAY) { invalid(f, ['in']); return toast('Дата заезда не может быть в прошлом', 'err'); }
+  S.search = { in: i, out: o, adults: +fd.get('adults'), children: +fd.get('children') };
+  go('rooms');
+};
+FORMS.filter = (fd, f) => {
+  const i = fd.get('in'), o = fd.get('out');
+  if (!i || !o || o <= i) { invalid(f, ['out']); return toast('Дата отъезда должна быть позже даты заезда', 'err'); }
+  const types = fd.getAll('type');
+  if (!types.length) return toast('Отметьте хотя бы один тип номера', 'err');
+  S.search = { in: i, out: o, adults: +fd.get('adults'), children: +fd.get('children') };
+  S.filter = { ...S.filter, types, min: fd.get('min'), max: fd.get('max') };
+  commit(); toast('Фильтры применены', 'info');
+};
+FORMS.feedback = (fd, f) => {
+  const bad = []; if (!fd.get('name').trim()) bad.push('name'); if (!emailOk(fd.get('email'))) bad.push('email'); if (fd.get('msg').trim().length < 5) bad.push('msg');
+  if (bad.length) { invalid(f, bad); return toast('Заполните имя, корректный e‑mail и сообщение', 'err'); }
+  f.reset(); toast('Сообщение сохранено (демо-режим: письмо не отправляется)', 'info');
+};
+FORMS.login = (fd, f) => {
+  const u = findUser(fd.get('email'));
+  if (!emailOk(fd.get('email'))) { invalid(f, ['email']); return toast('Введите корректный e‑mail', 'err'); }
+  if (!fd.get('pass')) { invalid(f, ['pass']); return toast('Введите пароль', 'err'); }
+  if (!u) { invalid(f, ['email']); return toast('Пользователь не найден. Зарегистрируйтесь или воспользуйтесь демо-доступом.', 'err'); }
+  if (!u.active) return toast('Учётная запись заблокирована. Обратитесь к администратору.', 'err');
+  loginAs(u);
+};
+FORMS.register = (fd, f) => {
+  const v = k => (fd.get(k) || '').trim(), bad = [];
+  if (!v('last')) bad.push('last'); if (!v('first')) bad.push('first'); if (!phoneOk(v('phone'))) bad.push('phone'); if (!emailOk(v('email'))) bad.push('email');
+  if (fd.get('pass').length < 6) bad.push('pass'); if (fd.get('pass') !== fd.get('pass2')) bad.push('pass2');
+  if (bad.length) { invalid(f, bad); return toast('Проверьте поля: пароль не короче 6 символов и совпадает с повтором', 'err'); }
+  if (findUser(v('email'))) { invalid(f, ['email']); return toast('Пользователь с таким e‑mail уже зарегистрирован', 'err'); }
+  if (!fd.get('agree')) return toast('Нужно согласие на обработку персональных данных', 'err');
+  const u = { email: v('email').toLowerCase(), first: v('first'), last: v('last'), phone: v('phone'), role: 'guest', active: true, mail: true };
+  S.users.push(u); notify(u.email, 'Регистрация на портале гостиницы «Альпинист» прошла успешно.'); loginAs(u);
+};
+FORMS.profile = (fd, f) => {
+  const u = me(), v = k => (fd.get(k) || '').trim(), bad = [];
+  if (!v('last')) bad.push('last'); if (!v('first')) bad.push('first'); if (!phoneOk(v('phone'))) bad.push('phone');
+  if (fd.get('pass') && fd.get('pass').length < 6) bad.push('pass'); if (fd.get('pass') !== fd.get('pass2')) bad.push('pass2');
+  if (bad.length) { invalid(f, bad); return toast('Проверьте выделенные поля', 'err'); }
+  u.last = v('last'); u.first = v('first'); u.phone = v('phone'); if (u.role === 'guest') u.mail = !!fd.get('mail');
+  commit(); toast(fd.get('pass') ? 'Данные и пароль сохранены' : 'Данные сохранены');
+};
+FORMS.review = (fd, f) => {
+  const text = fd.get('text').trim();
+  if (text.length < 10) { invalid(f, ['text']); return toast('Напишите хотя бы пару слов (от 10 символов)', 'err'); }
+  const u = me(), bid = fd.get('bookingId') ? +fd.get('bookingId') : null, b = bid ? getB(bid) : null;
+  S.reviews.push({ id: nextId(S.reviews), email: u.email, name: fullName(u), type: b ? b.type : fd.get('type'), rating: +fd.get('rating'), text, date: TODAY, status: 'pending', bookingId: bid });
+  closeModal(); commit(); toast('Спасибо! Отзыв отправлен на модерацию');
+};
+FORMS.reason = (fd, f) => {
+  const reason = fd.get('reason').trim(); if (reason.length < 3) { invalid(f, ['reason']); return toast('Укажите причину', 'err'); }
+  const b = getB(fd.get('id')), rej = fd.get('mode') === 'reject';
+  b.status = rej ? 'rejected' : 'cancelled'; b.reason = reason; if (b.pay === 'paid') b.pay = 'refunded';
+  notify(b.email, `Бронирование #${b.id} ${rej ? 'отклонено' : 'отменено администратором'}. Причина: ${reason}.${b.pay === 'refunded' ? ' Оплата будет возвращена.' : ''}`);
+  closeModal(); commit(); toast(`Бронирование #${b.id} ${rej ? 'отклонено' : 'отменено'}, гость уведомлён`, 'info');
+};
+FORMS['adm-new'] = (fd, f) => {
+  const v = k => (fd.get(k) || '').trim(), bad = [];
+  if (!v('last')) bad.push('last'); if (!v('first')) bad.push('first'); if (!phoneOk(v('phone'))) bad.push('phone'); if (v('email') && !emailOk(v('email'))) bad.push('email');
+  if (!v('in') || !v('out') || v('out') <= v('in')) bad.push('out');
+  if (bad.length) { invalid(f, bad); return toast('Проверьте выделенные поля', 'err'); }
+  const type = v('type'), ad = +fd.get('adults'), ch = +fd.get('children');
+  if (ad + ch > S.types[type].cap) return toast(`${S.types[type].name} вмещает до ${S.types[type].cap} гостей`, 'err');
+  const free = freeRooms(type, v('in'), v('out'));
+  if (!free.length) { invalid(f, ['type']); return toast('Нет свободных номеров этого типа на выбранные даты', 'err'); }
+  const email = v('email').toLowerCase();
+  if (email && !findUser(email)) S.users.push({ email, first: v('first'), last: v('last'), phone: v('phone'), role: 'guest', active: true, mail: true });
+  const id = Math.max(...S.bookings.map(b => b.id), 89) + 1;
+  const b = { id, email, name: `${v('first')} ${v('last')}`, phone: v('phone'), type, room: free[0].no, in: v('in'), out: v('out'), adults: ad, children: ch, services: fd.getAll('svc'), pay: fd.get('pay'), status: 'confirmed', created: TODAY, wish: '', reason: '', method: fd.get('pay') === 'paid' ? 'reception' : '' };
+  b.total = calc(b).total; S.bookings.push(b); notify(email, `Для вас оформлено бронирование #${id}: ${S.types[type].name}, ${ru(b.in)} – ${ru(b.out)}.`);
+  closeModal(); commit(); toast(`Бронирование #${id} создано, номер ${b.room}`);
+};
+FORMS.room = (fd, f) => {
+  const no = fd.get('no').trim(), old = fd.get('old');
+  if (!/^\d{3}$/.test(no)) { invalid(f, ['no']); return toast('Номер — три цифры, например 208', 'err'); }
+  if (no !== old && S.rooms.some(r => r.no === no)) { invalid(f, ['no']); return toast(`Номер ${no} уже есть`, 'err'); }
+  const data = { no, floor: +fd.get('floor'), type: fd.get('type'), status: fd.get('status') };
+  if (old) { const r = S.rooms.find(x => x.no === old); Object.assign(r, data); S.bookings.forEach(b => { if (b.room === old) b.room = no; }); }
+  else S.rooms.push({ ...data, cleaned: '', by: '' });
+  closeModal(); commit(); toast(old ? `Номер ${no} сохранён` : `Номер ${no} добавлен`);
+};
+FORMS.tariffs = (fd, f) => {
+  const bad = []; TK.forEach(k => { if (!(+fd.get('price_' + k) > 0)) bad.push('price_' + k); if (!(+fd.get('cap_' + k) >= 1)) bad.push('cap_' + k); if (!(+fd.get('area_' + k) > 0)) bad.push('area_' + k); });
+  if (bad.length) { invalid(f, bad); return toast('Цена, вместимость и площадь должны быть больше нуля', 'err'); }
+  TK.forEach(k => { const t = S.types[k]; t.price = +fd.get('price_' + k); t.cap = +fd.get('cap_' + k); t.area = +fd.get('area_' + k); });
+  commit(); toast('Тарифы сохранены — новые цены уже на сайте');
+};
+FORMS.services = () => { collectServices(); commit(); toast('Услуги сохранены'); };
+FORMS.report = (fd, f) => {
+  const from = fd.get('from'), to = fd.get('to');
+  if (!from || !to || to < from) { invalid(f, ['to']); return toast('Конец периода должен быть не раньше начала', 'err'); }
+  S.rep = { from, to }; commit(); toast('Отчёт сформирован');
+};
+FORMS.staff = (fd, f) => {
+  const v = k => (fd.get(k) || '').trim(), old = fd.get('old'), bad = [];
+  if (!v('last')) bad.push('last'); if (!v('first')) bad.push('first'); if (!phoneOk(v('phone'))) bad.push('phone'); if (!emailOk(v('email'))) bad.push('email');
+  if (bad.length) { invalid(f, bad); return toast('Проверьте выделенные поля', 'err'); }
+  const email = v('email').toLowerCase(), ex = findUser(email);
+  if (ex && ex.email !== old) { invalid(f, ['email']); return toast('Этот e‑mail уже занят', 'err'); }
+  if (old) {
+    const u = findUser(old); u.last = v('last'); u.first = v('first'); u.phone = v('phone'); if (fd.get('role')) u.role = fd.get('role');
+    if (email !== old) { Object.keys(S.shifts).forEach(k => { if (k.startsWith(old + '|')) { S.shifts[email + k.slice(old.length)] = S.shifts[k]; delete S.shifts[k]; } }); if (S.uid === old) S.uid = email; u.email = email; }
+  } else S.users.push({ email, first: v('first'), last: v('last'), phone: v('phone'), role: fd.get('role'), active: true });
+  closeModal(); commit(); toast(old ? 'Данные сотрудника сохранены' : 'Сотрудник добавлен');
+};
+FORMS.fault = (fd, f) => {
+  const bad = []; if (!fd.get('room')) bad.push('room'); if (fd.get('desc').trim().length < 3) bad.push('desc');
+  if (bad.length) { invalid(f, bad); return toast('Выберите номер и опишите неисправность', 'err'); }
+  const photo = fd.get('photo');
+  S.faults.push({ id: nextId(S.faults), date: TODAY, time: nowTime(), room: fd.get('room'), equip: fd.get('equip'), desc: fd.get('desc').trim(), urg: fd.get('urg'), author: shortName(me()), status: 'new', photo: photo && photo.name ? photo.name : '' });
+  S.faultRoom = ''; commit(); toast('Заявка отправлена администратору и техническому персоналу');
+};
+
+/* ================= Живые поля ================= */
+const LIVE = {};
+LIVE.draft = el => {
+  const d = S.draft, n = el.name;
+  d[n] = ['adults', 'children'].includes(n) ? +el.value : el.value;
+  if (n === 'in' && d.in && (!d.out || d.out <= d.in)) { d.out = addDays(d.in, 1); const o = $('input[name="out"][data-live="draft"]'); if (o) o.value = d.out; }
+  const t = $('#types'); if (t) t.innerHTML = typeOptions();
+  $('#summary').innerHTML = summaryInner(); save();
+};
+LIVE.guest = el => { const d = S.draft; if (el.name === 'wish') d.wish = el.value; else d.guest[el.name] = el.value; el.classList.remove('invalid'); save(); };
+LIVE.svc = el => {
+  const d = S.draft, id = el.value; d.services = el.checked ? [...new Set([...d.services, id])] : d.services.filter(x => x !== id);
+  const s = S.services.find(x => x.id === id), cell = $('#sv-' + id); if (cell) cell.textContent = el.checked ? money(svcSum(s, d)) : '—';
+  $('#summary').innerHTML = summaryInner(); save();
+};
+LIVE.method = el => { S.draft.method = el.value; $$('#pay-list .pay-opt').forEach(o => o.classList.toggle('on', o.querySelector('input').checked)); save(); };
+LIVE.sort = el => { S.filter.sort = el.value; $('#room-list').innerHTML = roomList(); save(); };
+LIVE.rq = el => { S.rq[el.name] = el.value; $('#rq-table').innerHTML = rqTable(); save(); };
+LIVE['room-status'] = el => { const r = S.rooms.find(x => x.no === el.dataset.no); r.status = el.value; if (el.value === 'clean') r.cleaned = `${dm(TODAY)} ${nowTime()}`; const inModal = !!el.closest('#modal-root'); if (inModal) closeModal(); commit(); toast(`Номер ${r.no}: ${RST[r.status][1].toLowerCase()}`, 'info'); };
+LIVE.shift = el => { S.shifts[el.dataset.key] = el.value; commit(); };
+LIVE['fault-st'] = el => { const f = S.faults.find(x => x.id === +el.dataset.id); f.status = el.value; commit(); toast(`Заявка ${f.id}: ${FST[f.status][1].toLowerCase()}`, 'info'); };
+LIVE['b-room'] = el => { const b = getB(el.dataset.id); b.room = el.value; save(); render(); toast(`Бронированию #${b.id} назначен номер ${b.room}`, 'info'); };
+
+/* ================= Обработчики событий ================= */
+document.addEventListener('click', e => {
+  if (!e.target.closest('.dd-wrap')) $$('.dropdown').forEach(d => d.hidden = true);
+  const g = e.target.closest('[data-go]');
+  if (g) { e.preventDefault(); let p = {}; try { p = JSON.parse(g.dataset.p || '{}'); } catch (x) { } go(g.dataset.go, p); return; }
+  const a = e.target.closest('[data-act]');
+  if (a && ACT[a.dataset.act]) { if (a.tagName === 'A') e.preventDefault(); ACT[a.dataset.act](a.dataset, a, e); return; }
+  if (e.target.closest('a[href="#"]')) e.preventDefault();
+});
+document.addEventListener('submit', e => { const f = e.target.closest('form[data-form]'); if (f) { e.preventDefault(); $$('.invalid', f).forEach(x => x.classList.remove('invalid')); FORMS[f.dataset.form](new FormData(f), f); } });
+const TEXTY = el => el.tagName === 'TEXTAREA' || ['text', 'search', 'email', 'tel', 'number', 'password'].includes(el.type);
+document.addEventListener('input', e => { const el = e.target; if (el.classList && el.classList.contains('invalid')) el.classList.remove('invalid'); if (el.dataset && el.dataset.live && TEXTY(el) && LIVE[el.dataset.live]) LIVE[el.dataset.live](el); });
+document.addEventListener('change', e => { const el = e.target; if (el.dataset && 'file' in el.dataset) { const n = el.closest('.file-in').querySelector('.f-name'); n.textContent = el.files[0] ? el.files[0].name : 'Файл не выбран'; } if (el.dataset && el.dataset.live && !TEXTY(el) && LIVE[el.dataset.live]) LIVE[el.dataset.live](el); });
+document.addEventListener('keydown', e => { if (e.key === 'Escape') { if ($('#modal-root').innerHTML) closeModal(); $$('.dropdown').forEach(d => d.hidden = true); document.body.classList.remove('nav-open'); } });
+
+document.documentElement.lang = 'ru';
+// Проверка доступа для сохранённого маршрута и первый рендер
+if (!allowed(S.route, me())) S.route = 'home';
+if (S.route === 'booking' && !S.draft) S.draft = newDraft();
+function fromAddress() {
+  const x = routeOf(location.hash.slice(1) || '/');
+  if (x.r === S.route && pathOf(x.r, x.p) === pathOf(S.route, S.params)) { const h = '#' + pathOf(S.route, S.params); if (location.hash !== h) try { history.replaceState(null, '', h); } catch (e) { } return false; }
+  go(x.r, x.p); return true;
+}
+if (!(location.hash.length > 2 && fromAddress())) render();
+window.addEventListener('hashchange', fromAddress);
+window.addEventListener('popstate', fromAddress);
+})();
+
+</script>
+</body>
+</html>
