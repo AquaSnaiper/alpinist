@@ -880,9 +880,9 @@ function mapItem(it) {
   return `<li><div class="m-row"><div>${title}</div>${accTag(it.a)}</div><span class="m-path">${path}</span>${it.kids ? `<ul>${it.kids.map(mapItem).join('')}</ul>` : ''}</li>`;
 }
 P.sitemap = () => {
-  const total = STRUCT.reduce((a, s) => a + s.items.reduce((b, it) => b + (it.g ? 0 : 1 + (it.kids ? it.kids.length : 0)), 0), 0);
+  const total = STRUCT.reduce((a, s) => a + (s.path !== '/' ? 1 : 0) + s.items.reduce((b, it) => b + (it.g ? 0 : 1 + (it.kids ? it.kids.length : 0)), 0), 0);
   return pageTitle('Карта сайта', [['home', 'Главная']]) + `<section class="page"><div class="container">
-  <p class="muted" style="max-width:760px;margin-bottom:20px">Портал состоит из трёх разделов: публичной части для всех посетителей, личного кабинета гостя и служебного раздела для сотрудников гостиницы — всего ${total} ${plural(total, 'страница', 'страницы', 'страниц')}. Под названием каждой страницы указан её адрес.</p>
+  <p class="muted" style="max-width:760px;margin-bottom:20px">Портал состоит из трёх разделов: публичной части для всех посетителей, личного кабинета гостя и служебного раздела для сотрудников гостиницы — всего ${total} ${plural(total, 'страница', 'страницы', 'страниц')}. Под названием каждой страницы указан её адрес, корневые страницы личного кабинета и служебного раздела открывают первую страницу раздела.</p>
   <div class="map-legend"><span>Доступ:</span>${['all', 'guest', 'staff', 'admin'].map(a => `<span class="row gap8">${accTag(a)}${{ all: 'все посетители', guest: 'авторизованный гость', staff: 'все сотрудники', admin: 'только администратор' }[a]}</span>`).join('')}</div>
   <div class="map-grid">${STRUCT.map(s => `<div class="card map-card"><div class="mc-head"><h3>${s.t}</h3><span class="m-path">${s.path}</span><span class="small">${s.note}</span></div><ul class="map-tree">${s.items.map(mapItem).join('')}</ul></div>`).join('')}</div></div></section>`;
 };
